@@ -1,4 +1,4 @@
-A dart port of the liquid / django template engine.
+A dart port of the liquid / django template engine. 
 
 Created under a BSD-style
 [license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).

@@ -1,5 +1,3 @@
-import 'dart:mirrors';
-
 import './errors.dart';
 import 'block.dart';
 import 'context.dart';
@@ -107,14 +105,8 @@ class MemberExpression implements Expression {
     }
     if (base is List) {
       return base[int.parse(member.value) % base.length];
-    } else if (context.useMirrorsLibrary) {
-      final r = reflect(base);
-      var symbol = Symbol(member.value);
-      try {
-        return r.invoke(symbol, []).reflectee;
-      } catch (ex) {
-        return r.getField(symbol).reflectee;
-      }
+    } else {
+      return null;
     }
   }
 }

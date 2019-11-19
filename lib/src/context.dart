@@ -19,8 +19,6 @@ abstract class RenderContext {
 
   RenderContext push(Map<String, dynamic> variables);
 
-  bool get useMirrorsLibrary;
-
   RenderContext clone();
 
   RenderContext cloneAsRoot();
@@ -62,8 +60,6 @@ class Context implements RenderContext, ParseContext {
   Context parent;
 
   RenderContext get root => parent == null ? this : parent.root;
-
-  bool useMirrorsLibrary = true;
 
   Context._();
 
