@@ -42,11 +42,14 @@ class Document extends Block {
   @override
   Iterable<String> render(RenderContext initialContext) {
     var context = initialContext.cloneAsRoot();
+
+    for (final load in loads) {
+      context.registerModule(load);
+    }
+
     if (base == null) {
       return super.render(context);
     }
-
-    // TODO: load libraries into `context`
 
     var baseContext = initialContext.cloneAsRoot();
     for (final tag in children) {

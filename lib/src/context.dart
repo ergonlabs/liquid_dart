@@ -26,6 +26,8 @@ abstract class RenderContext {
   RenderContext clone();
 
   RenderContext cloneAsRoot();
+
+  void registerModule(String load);
 }
 
 abstract class ParseContext {
@@ -66,6 +68,10 @@ class Context implements RenderContext, ParseContext {
   bool useMirrorsLibrary = true;
 
   Context._();
+
+  void registerModule(String load) {
+    modules[load].register(this);
+  }
 
   factory Context.create() {
     final context = Context._();
