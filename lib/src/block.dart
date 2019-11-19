@@ -38,7 +38,8 @@ abstract class BlockParser {
 
   Block create(List<Token> tokens, List<Tag> children);
 
-  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
+  void unexpectedTag(
+      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
 
   bool approveTag(Token start, List<Tag> childrenSoFar, Token asToken) =>
       start.value != 'extend' && start.value != 'load';
@@ -72,7 +73,8 @@ class _SimpleBlockParser extends BlockParser {
       factory(tokens, children);
 
   @override
-  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(
+      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     throw ParseException.unexpected(start);
   }
 }

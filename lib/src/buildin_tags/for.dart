@@ -78,7 +78,8 @@ class _ForBlockParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(
+      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     if (start.value == 'else' || start.value == 'empty') {
       if (innerChildren != null) {
         throw ParseException("Only one {% else %} is allowed in a {% for %}");

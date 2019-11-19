@@ -50,7 +50,8 @@ class _IfBlockParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(
+      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     if (start.value == 'elseif') {
       if (lastExpression == null) {
         throw ParseException.unexpected(start,

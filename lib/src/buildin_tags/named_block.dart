@@ -17,13 +17,13 @@ class NamedBlock extends Block {
   }
 
   static SimpleBlockFactory get factory => (tokens, children) {
-    if (tokens.length == 0) {
-      throw ParseException('{% block %} missing name');
-    }
-    if (tokens.length > 1) {
-      throw ParseException.unexpected(tokens[1]);
-    }
+        if (tokens.length == 0) {
+          throw ParseException('{% block %} missing name');
+        }
+        if (tokens.length > 1) {
+          throw ParseException.unexpected(tokens[1]);
+        }
 
-    return NamedBlock(tokens.first.value, children);
-  };
+        return NamedBlock(tokens.first.value, children);
+      };
 }

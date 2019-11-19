@@ -50,7 +50,7 @@ class TagParser {
       if (op.value == 'contains') {
         final temp = exp;
         exp = right;
-        right= temp;
+        right = temp;
       }
       exp = BinaryOperation((a, b) {
         if (b is Map) {
@@ -90,7 +90,7 @@ class TagParser {
 
     return exp;
   }
-  
+
   Expression parseSingleTokenExpression() {
     expect(types: [
       TokenType.identifier,
@@ -110,22 +110,22 @@ class TagParser {
       }
       return LookupExpression(name);
     }
-    
+
     return ConstantExpression.fromToken(name);
   }
 
   Expression parseFilterExpression() {
     var exp = parseMemberExpression();
 
-   return parseFilters(exp);
+    return parseFilters(exp);
   }
 
   Expression parseMemberExpression() {
     var exp = parseSingleTokenExpression();
-    
+
     while (tokens.current.type == TokenType.dot) {
       tokens.moveNext();
-      
+
       exp = MemberExpression(exp, tokens.current);
       tokens.moveNext();
     }
@@ -160,7 +160,7 @@ class TagParser {
 
       exp = FilterExpression(exp, name, arguments);
     }
-    
+
     return exp;
   }
 

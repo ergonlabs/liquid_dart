@@ -35,7 +35,6 @@ abstract class Module {
 }
 
 class Context implements RenderContext, ParseContext {
-
   Map<String, Iterable<String>> blocks = {};
 
   @override
@@ -47,9 +46,7 @@ class Context implements RenderContext, ParseContext {
   @override
   Map<String, Filter> filters = {};
 
-  Map<String, Module> modules = {
-    'builtins': BuiltinsModule()
-  };
+  Map<String, Module> modules = {'builtins': BuiltinsModule()};
 
   Map<Tag, Map<String, dynamic>> _tagStates = {};
 

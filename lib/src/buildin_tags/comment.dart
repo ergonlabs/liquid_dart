@@ -1,7 +1,7 @@
 import '../block.dart';
 
 class Comment extends Block {
-  Comment(): super([]);
+  Comment() : super([]);
 
   static final SimpleBlockFactory factory = (tokens, children) {
     return Comment();

@@ -9,8 +9,7 @@ import '../tag.dart';
 class Extends extends Block {
   final DocumentFuture base;
 
-  Extends._(this.base)
-      : super([]);
+  Extends._(this.base) : super([]);
 
   @override
   Iterable<String> render(RenderContext context) {
@@ -31,5 +30,6 @@ class _BlockParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
+  void unexpectedTag(
+      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
 }

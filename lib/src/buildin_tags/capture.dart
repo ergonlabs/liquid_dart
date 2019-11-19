@@ -7,7 +7,7 @@ import '../tag.dart';
 abstract class CaptureBase extends Block {
   String to;
 
-  CaptureBase(this.to, List<Tag> children): super(children);
+  CaptureBase(this.to, List<Tag> children) : super(children);
 
   RenderContext scope(RenderContext context);
 
@@ -22,8 +22,7 @@ abstract class CaptureBase extends Block {
 }
 
 class Cache extends CaptureBase {
-  Cache(String to, List<Tag> children)
-      : super(to, children);
+  Cache(String to, List<Tag> children) : super(to, children);
 
   @override
   RenderContext scope(RenderContext context) => context.root;
@@ -37,8 +36,7 @@ class Cache extends CaptureBase {
 }
 
 class Capture extends CaptureBase {
-  Capture(String to, List<Tag> children)
-      : super(to, children);
+  Capture(String to, List<Tag> children) : super(to, children);
 
   @override
   RenderContext scope(RenderContext context) => context;

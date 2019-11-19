@@ -1,13 +1,12 @@
+import '../block.dart';
 import '../context.dart';
 import '../document.dart';
 import '../errors.dart';
-import 'lexer.dart';
-import 'tag_parser.dart';
 import '../expressions.dart';
-
-import '../block.dart';
 import '../model.dart';
 import '../tag.dart';
+import 'lexer.dart';
+import 'tag_parser.dart';
 
 class Parser {
   final Source source;
@@ -21,7 +20,8 @@ class Parser {
     return parseBlock(DocumentParser(), [], '<doc>', null) as Document;
   }
 
-  Block parseBlock(BlockParser builder, List<Token> args, String start, Token asTarget) {
+  Block parseBlock(
+      BlockParser builder, List<Token> args, String start, Token asTarget) {
     var innerChildren = <Tag>[];
     builder.start(context, args);
     if (builder.hasEndTag) {
