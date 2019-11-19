@@ -1,12 +1,7 @@
-import 'dart:collection';
-
-import '../errors.dart';
-import '../parser/tag_parser.dart';
-import '../expressions.dart';
-
-import '../context.dart';
 import '../block.dart';
+import '../context.dart';
 import '../model.dart';
+import '../parser/tag_parser.dart';
 import '../tag.dart';
 
 abstract class CaptureBase extends Block {

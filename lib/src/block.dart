@@ -1,8 +1,4 @@
-import 'dart:collection';
-
 import './tag.dart';
-import './expressions.dart';
-
 import 'context.dart';
 import 'errors.dart';
 import 'model.dart';

@@ -1,8 +1,7 @@
+import '../block.dart';
 import '../context.dart';
 import '../errors.dart';
 import '../tag.dart';
-
-import '../block.dart';
 
 class NamedBlock extends Block {
   final String name;

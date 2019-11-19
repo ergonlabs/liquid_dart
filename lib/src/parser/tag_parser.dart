@@ -1,9 +1,8 @@
-import '../document.dart';
-
 import '../context.dart';
+import '../document.dart';
 import '../errors.dart';
-import '../model.dart';
 import '../expressions.dart';
+import '../model.dart';
 
 class TagParser {
   final Iterator<Token> tokens;

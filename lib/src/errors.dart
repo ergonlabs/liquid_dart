@@ -1,5 +1,3 @@
-import './parser/lexer.dart';
-
 import 'model.dart';
 
 class ParseException extends Error {

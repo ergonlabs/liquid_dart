@@ -1,5 +1,3 @@
-import './block.dart';
-
 import 'context.dart';
 import 'document.dart';
 import 'model.dart';

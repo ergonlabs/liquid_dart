@@ -1,15 +1,9 @@
-import 'dart:collection';
-
-import '../buildin_tags/assign.dart';
+import '../block.dart';
+import '../context.dart';
 import '../document.dart';
-import '../errors.dart';
+import '../model.dart';
 import '../parser/parser.dart';
 import '../parser/tag_parser.dart';
-import '../expressions.dart';
-
-import '../context.dart';
-import '../block.dart';
-import '../model.dart';
 import '../tag.dart';
 
 class Extends extends Block {

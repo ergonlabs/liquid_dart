@@ -1,9 +1,3 @@
-import 'dart:collection';
-
-import '../errors.dart';
-import '../expressions.dart';
-
-import '../context.dart';
 import '../block.dart';
 
 class Comment extends Block {

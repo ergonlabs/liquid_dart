@@ -1,11 +1,7 @@
-import 'dart:async';
-import 'dart:collection';
-
 import './errors.dart';
 import './expressions.dart';
 import './model.dart';
 import './template.dart';
-
 import 'block.dart';
 import 'buildin_tags/extends.dart';
 import 'buildin_tags/load.dart';

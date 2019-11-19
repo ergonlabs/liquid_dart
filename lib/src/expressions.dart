@@ -1,11 +1,9 @@
 import 'dart:mirrors';
 
 import './errors.dart';
-
 import 'block.dart';
 import 'context.dart';
 import 'model.dart';
-import 'parser/lexer.dart';
 import 'tag.dart';
 
 abstract class Expression {
