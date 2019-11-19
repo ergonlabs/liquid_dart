@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-import 'package:liquid/src/errors.dart';
-import 'package:liquid/src/expressions.dart';
+import '../errors.dart';
+import '../expressions.dart';
 
 import '../context.dart';
 import '../block.dart';

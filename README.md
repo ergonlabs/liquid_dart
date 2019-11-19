@@ -8,7 +8,7 @@ Created under a BSD-style
 A simple usage example:
 
 ```dart
-import 'package:liquid/liquid.dart';
+import 'package:liquid_engine/liquid_engine.dart';
 
 main() {
   final raw = '''

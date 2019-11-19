@@ -1,4 +1,4 @@
-library liquid;
+library liquid_engine;
 
 export 'src/context.dart' show Context, Filter, Module, ParseContext, RenderContext;
 export 'src/template.dart' show Template;

@@ -1,9 +1,9 @@
-import 'package:liquid/src/context.dart';
-import 'package:liquid/src/document.dart';
-import 'package:liquid/src/errors.dart';
-import 'package:liquid/src/parser/lexer.dart';
-import 'package:liquid/src/parser/tag_parser.dart';
-import 'package:liquid/src/expressions.dart';
+import '../context.dart';
+import '../document.dart';
+import '../errors.dart';
+import 'lexer.dart';
+import 'tag_parser.dart';
+import '../expressions.dart';
 
 import '../block.dart';
 import '../model.dart';

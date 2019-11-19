@@ -1,4 +1,4 @@
-name: liquid
+name: liquid_engine
 description: A dart port of the liquid / django template engine.
 version: 0.1.0
 homepage: https://github.com/ergonlabs/liquid_dart

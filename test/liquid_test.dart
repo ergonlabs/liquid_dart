@@ -1,7 +1,7 @@
-import 'package:liquid/liquid.dart';
-import 'package:liquid/src/context.dart';
-import 'package:liquid/src/model.dart';
-import 'package:liquid/src/template.dart';
+import 'package:liquid_engine/liquid_engine.dart';
+import 'package:liquid_engine/src/context.dart';
+import 'package:liquid_engine/src/model.dart';
+import 'package:liquid_engine/src/template.dart';
 import 'package:test/test.dart';
 
 void main() {

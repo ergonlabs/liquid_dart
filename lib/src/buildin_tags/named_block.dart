@@ -1,6 +1,6 @@
-import 'package:liquid/src/context.dart';
-import 'package:liquid/src/errors.dart';
-import 'package:liquid/src/tag.dart';
+import '../context.dart';
+import '../errors.dart';
+import '../tag.dart';
 
 import '../block.dart';
 

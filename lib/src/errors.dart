@@ -1,4 +1,4 @@
-import 'package:liquid/src/parser/lexer.dart';
+import './parser/lexer.dart';
 
 import 'model.dart';
 

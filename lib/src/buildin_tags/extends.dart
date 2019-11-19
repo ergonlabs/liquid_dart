@@ -1,11 +1,11 @@
 import 'dart:collection';
 
-import 'package:liquid/src/buildin_tags/assign.dart';
-import 'package:liquid/src/document.dart';
-import 'package:liquid/src/errors.dart';
-import 'package:liquid/src/parser/parser.dart';
-import 'package:liquid/src/parser/tag_parser.dart';
-import 'package:liquid/src/expressions.dart';
+import '../buildin_tags/assign.dart';
+import '../document.dart';
+import '../errors.dart';
+import '../parser/parser.dart';
+import '../parser/tag_parser.dart';
+import '../expressions.dart';
 
 import '../context.dart';
 import '../block.dart';

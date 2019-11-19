@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:liquid/src/errors.dart';
-import 'package:liquid/src/expressions.dart';
-import 'package:liquid/src/model.dart';
-import 'package:liquid/src/template.dart';
+import './errors.dart';
+import './expressions.dart';
+import './model.dart';
+import './template.dart';
 
 import 'block.dart';
 import 'buildin_tags/extends.dart';

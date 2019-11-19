@@ -1,4 +1,4 @@
-import 'package:liquid/src/document.dart';
+import '../document.dart';
 
 import '../context.dart';
 import '../errors.dart';

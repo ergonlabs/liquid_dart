@@ -1,5 +1,5 @@
-import 'package:liquid/src/buildin_tags/named_block.dart';
-import 'package:liquid/src/builtins.dart';
+import './buildin_tags/named_block.dart';
+import './builtins.dart';
 
 import 'tag.dart';
 import 'block.dart';

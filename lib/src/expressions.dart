@@ -1,6 +1,6 @@
 import 'dart:mirrors';
 
-import 'package:liquid/src/errors.dart';
+import './errors.dart';
 
 import 'block.dart';
 import 'context.dart';
