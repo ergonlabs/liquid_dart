@@ -68,7 +68,7 @@ class BuiltinsModule implements Module {
         (input, args) => input?.toString()?.toLowerCase();
 
     context.filters['upcase'] = context.filters['upper'] =
-        (input, args) => input?.toString()?.toLowerCase();
+        (input, args) => input?.toString()?.toUpperCase();
 
     context.filters['capitalize'] = context.filters['capfirst'] =
         (input, args) => input?.toString()?.replaceFirstMapped(
