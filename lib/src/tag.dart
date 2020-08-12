@@ -2,6 +2,11 @@ import 'context.dart';
 
 abstract class Tag {
   Iterable<String> render(RenderContext context);
+
+  @override
+  String toString() {
+    return 'Tag{}';
+  }
 }
 
 class TagStatic implements Tag {
@@ -11,4 +16,9 @@ class TagStatic implements Tag {
 
   @override
   Iterable<String> render(RenderContext context) => [value];
+
+  @override
+  String toString() {
+    return 'TagStatic{value: $value}';
+  }
 }

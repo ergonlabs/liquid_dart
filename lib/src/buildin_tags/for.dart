@@ -52,6 +52,15 @@ class For extends Block {
   }
 
   static final BlockParserFactory factory = () => _ForBlockParser();
+
+  @override
+  String toString() {
+    var innerC = innerChildren?.toString() ?? 'none';
+    if (innerC.length > 40) innerC = innerC.substring(0, 30) + '...' + innerC.substring(innerC.length - 7);
+    var elseC = elseChildren?.toString() ?? 'none';
+    if (elseC.length > 40) elseC = elseC.substring(0, 30) + '...' + elseC.substring(elseC.length - 7);
+    return 'For{from: $from, to: $to, innerChildren: $innerC, elseChildren: $elseC}';
+  }
 }
 
 class _ForBlockParser extends BlockParser {
@@ -73,13 +82,11 @@ class _ForBlockParser extends BlockParser {
     parser.expect(types: [TokenType.identifier], value: 'in');
 
     parser.moveNext();
-    return For(to, parser.parseFilterExpression(), innerChildren ?? children,
-        innerChildren != null ? children : []);
+    return For(to, parser.parseFilterExpression(), innerChildren ?? children, innerChildren != null ? children : []);
   }
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     if (start.value == 'else' || start.value == 'empty') {
       if (innerChildren != null) {
         throw ParseException("Only one {% else %} is allowed in a {% for %}");
@@ -87,8 +94,7 @@ class _ForBlockParser extends BlockParser {
       innerChildren = List.from(childrenSoFar);
       childrenSoFar.clear();
     } else {
-      throw ParseException.unexpected(start,
-          expected: '{% else %} or {% endfor %}');
+      throw ParseException.unexpected(start, expected: '{% else %} or {% endfor %}');
     }
   }
 }

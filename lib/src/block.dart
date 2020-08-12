@@ -1,6 +1,7 @@
 import './tag.dart';
 import 'context.dart';
 import 'errors.dart';
+import 'exception/tagrenderexception.dart';
 import 'model.dart';
 import 'parser/parser.dart';
 
@@ -10,13 +11,15 @@ class Block implements Tag {
   Block(this.children);
 
   @override
-  Iterable<String> render(RenderContext context) =>
-      renderTags(context, children);
+  Iterable<String> render(RenderContext context) => renderTags(context, children);
 
-  Iterable<String> renderTags(
-      RenderContext context, Iterable<Tag> children) sync* {
+  Iterable<String> renderTags(RenderContext context, Iterable<Tag> children) sync* {
     for (final child in children) {
-      yield* child.render(context);
+      try {
+        yield* child.render(context);
+      } catch (error, stacktrace) {
+        throw TagRenderException(error, stacktrace, child);
+      }
     }
   }
 }
@@ -38,16 +41,13 @@ abstract class BlockParser {
 
   Block create(List<Token> tokens, List<Tag> children);
 
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
 
-  bool approveTag(Token start, List<Tag> childrenSoFar, Token asToken) =>
-      start.value != 'extend' && start.value != 'load';
+  bool approveTag(Token start, List<Tag> childrenSoFar, Token asToken) => start.value != 'extend' && start.value != 'load';
 
   BlockParser();
 
-  static BlockParserFactory simple(SimpleBlockFactory factory,
-      {hasEndTag = true}) {
+  static BlockParserFactory simple(SimpleBlockFactory factory, {hasEndTag = true}) {
     return () => _SimpleBlockParser(factory, hasEndTag);
   }
 
@@ -69,12 +69,10 @@ class _SimpleBlockParser extends BlockParser {
   _SimpleBlockParser(this.factory, this.hasEndTag);
 
   @override
-  Block create(List<Token> tokens, List<Tag> children) =>
-      factory(tokens, children);
+  Block create(List<Token> tokens, List<Tag> children) => factory(tokens, children);
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     throw ParseException.unexpected(start);
   }
 }
