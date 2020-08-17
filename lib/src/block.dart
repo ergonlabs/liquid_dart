@@ -56,6 +56,8 @@ abstract class BlockParser {
   }
 
   bool get hasEndTag => true;
+
+  bool get defaultAsProcessing => true;
 }
 
 typedef BlockParser BlockParserFactory();

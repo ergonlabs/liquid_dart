@@ -1,11 +1,10 @@
 import 'package:liquid_engine/liquid_engine.dart';
 import 'package:liquid_engine/src/model.dart';
 import 'package:liquid_engine/src/parser/lexer.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('parser tests', () {
-
     test('markup only', () {
       var template = Lexer().tokenize(Source(null, 'static markup', null)).toList();
 

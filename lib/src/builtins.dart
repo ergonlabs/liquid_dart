@@ -1,3 +1,5 @@
+import 'package:liquid_engine/src/buildin_tags/regroup.dart';
+
 import 'block.dart';
 import 'buildin_tags/assign.dart';
 import 'buildin_tags/capture.dart';
@@ -30,6 +32,7 @@ class BuiltinsModule implements Module {
     context.tags['load'] = BlockParser.simple(Load.factory, hasEndTag: false);
     context.tags['block'] = BlockParser.simple(NamedBlock.factory);
     context.tags['extends'] = Extends.factory;
+    context.tags['regroup'] = Regroup.factory;
 
     context.filters['default'] = (input, args) {
       var output = input != null ? input.toString() : "";
@@ -61,22 +64,17 @@ class BuiltinsModule implements Module {
       return '';
     };
 
-    context.filters['size'] =
-        (input, args) => input is Iterable ? input.length : 0;
+    context.filters['size'] = (input, args) => input is Iterable ? input.length : 0;
 
-    context.filters['downcase'] = context.filters['lower'] =
-        (input, args) => input?.toString()?.toLowerCase();
+    context.filters['downcase'] = context.filters['lower'] = (input, args) => input?.toString()?.toLowerCase();
 
-    context.filters['upcase'] = context.filters['upper'] =
-        (input, args) => input?.toString()?.toLowerCase();
+    context.filters['upcase'] = context.filters['upper'] = (input, args) => input?.toString()?.toLowerCase();
 
-    context.filters['capitalize'] = context.filters['capfirst'] =
-        (input, args) => input?.toString()?.replaceFirstMapped(
-              RegExp(r'^\w'),
-              (m) => m.group(0).toUpperCase(),
-            );
+    context.filters['capitalize'] = context.filters['capfirst'] = (input, args) => input?.toString()?.replaceFirstMapped(
+          RegExp(r'^\w'),
+          (m) => m.group(0).toUpperCase(),
+        );
 
-    context.filters['join'] = (input, args) => (input as Iterable)
-        .join(args != null && args.isNotEmpty ? args[0] : ' ');
+    context.filters['join'] = (input, args) => (input as Iterable).join(args != null && args.isNotEmpty ? args[0] : ' ');
   }
 }
