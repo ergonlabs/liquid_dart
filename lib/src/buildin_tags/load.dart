@@ -16,7 +16,7 @@ class Load extends Block {
   static final SimpleBlockFactory factory = (tokens, children) {
     var parser = TagParser.from(tokens);
     parser.expect(types: [TokenType.identifier]);
-    final library = parser.current.value;
+    final library = parser.current!.value;
     return Load(library);
   };
 }

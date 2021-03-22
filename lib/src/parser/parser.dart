@@ -14,7 +14,7 @@ class Parser {
   final ParseContext context;
 
   Parser(this.context, this.source)
-      : this.tokens = Lexer().tokenize(source).iterator;
+      : tokens = Lexer().tokenize(source).iterator;
 
   Document parse() {
     return parseBlock(DocumentParser(), [], '<doc>', null) as Document;

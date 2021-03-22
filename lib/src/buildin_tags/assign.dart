@@ -13,14 +13,14 @@ class Assign extends Block {
 
   @override
   Iterable<String> render(RenderContext context) {
-    var innerContext = context.push({this.to: from.evaluate(context)});
+    var innerContext = context.push({to: from.evaluate(context)});
     return super.render(innerContext);
   }
 
   static final SimpleBlockFactory factory = (tokens, children) {
     var parser = TagParser.from(tokens);
     parser.expect(types: [TokenType.identifier]);
-    final to = parser.current.value;
+    final to = parser.current!.value;
 
     parser.moveNext();
     parser.expect(types: [TokenType.assign]);

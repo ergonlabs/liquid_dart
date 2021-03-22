@@ -30,7 +30,7 @@ class Cache extends CaptureBase {
   static final SimpleBlockFactory factory = (tokens, children) {
     var parser = TagParser.from(tokens);
     parser.expect(types: [TokenType.identifier]);
-    final to = parser.current.value;
+    final to = parser.current!.value;
     return Cache(to, children);
   };
 }
@@ -44,7 +44,7 @@ class Capture extends CaptureBase {
   static final SimpleBlockFactory factory = (tokens, children) {
     var parser = TagParser.from(tokens);
     parser.expect(types: [TokenType.identifier]);
-    final to = parser.current.value;
+    final to = parser.current!.value;
     return Capture(to, children);
   };
 }

@@ -12,13 +12,13 @@ class TagParser {
 
   TagParser.fromIterator(this.tokens);
 
-  Token get current => tokens.current;
+  Token? get current => tokens.current;
 
-  moveNext() => tokens.moveNext();
+  bool moveNext() => tokens.moveNext();
 
   Expression parseBooleanExpression() {
     var exp = _parseAnd();
-    if (current.value == 'or') {
+    if (current!.value == 'or') {
       exp = BinaryOperation((a, b) => a || a, exp, _parseAnd());
     }
     return exp;
@@ -26,14 +26,14 @@ class TagParser {
 
   Expression _parseAnd() {
     var exp = _parseNot();
-    if (current.value == 'and') {
+    if (current!.value == 'and') {
       exp = BinaryOperation((a, b) => a && b, exp, _parseNot());
     }
     return exp;
   }
 
   Expression _parseNot() {
-    if (current.type == TokenType.identifier && current.value == 'not') {
+    if (current!.type == TokenType.identifier && current!.value == 'not') {
       moveNext();
       return NotExpression(_parseBinaryExpression());
     }
@@ -43,11 +43,11 @@ class TagParser {
   Expression _parseBinaryExpression() {
     var exp = parseFilterExpression();
 
-    if (current.value == 'contains' || current.value == 'in') {
+    if (current!.value == 'contains' || current!.value == 'in') {
       var op = current;
       moveNext();
       var right = parseFilterExpression();
-      if (op.value == 'contains') {
+      if (op!.value == 'contains') {
         final temp = exp;
         exp = right;
         right = temp;
@@ -61,9 +61,9 @@ class TagParser {
           return false;
         }
       }, exp, right);
-    } else if (current.type == TokenType.comparison) {
+    } else if (current!.type == TokenType.comparison) {
       Operation? op;
-      switch (current.value) {
+      switch (current!.value) {
         case '==':
           op = (a, b) => a == b;
           break;
@@ -165,7 +165,7 @@ class TagParser {
   }
 
   DocumentFuture parseDocumentReference(ParseContext context) {
-    final root = current.source!.root;
+    final root = current!.source!.root;
     final path = parseSingleTokenExpression();
     return DocumentFuture(root!, context, path);
   }
