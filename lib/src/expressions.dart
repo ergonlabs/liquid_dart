@@ -83,7 +83,7 @@ class LookupExpression implements Expression {
   LookupExpression(this.name);
 
   @override
-  evaluate(RenderContext context) {
+  dynamic evaluate(RenderContext context) {
     return context.variables[name.value];
   }
 }
@@ -95,7 +95,7 @@ class MemberExpression implements Expression {
   MemberExpression(this.base, this.member);
 
   @override
-  evaluate(RenderContext context) {
+  dynamic evaluate(RenderContext context) {
     final base = this.base.evaluate(context);
     if (base == null) {
       return null;
@@ -136,7 +136,7 @@ class BlockExpression implements Expression {
   BlockExpression.fromTags(List<Tag> tags) : this(Block(tags));
 
   @override
-  evaluate(RenderContext context) => block.render(context).join("");
+  String evaluate(RenderContext context) => block.render(context).join('');
 }
 
 class ExpressionTag implements Tag {
