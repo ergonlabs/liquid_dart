@@ -186,13 +186,16 @@ void main() {
       ];
 
       context.variables['e'] = null;
+      context.variables['numbers'] = [1,2,3];
 
       var template = Template.parse(
           context, Source(null, '{% if a == "this" %}yes{% endif %}', null));
       expect(template.render(context), equals('yes'));
+
       template = Template.parse(context,
           Source(null, '{% if a != "this" %}no{% else %}yes{% endif %}', null));
       expect(template.render(context), equals('yes'));
+
       template = Template.parse(
           context,
           Source(
@@ -200,6 +203,7 @@ void main() {
               '{% if a != "this" %}no{% elseif true %}yes{% else %}no{% endif %}',
               null));
       expect(template.render(context), equals('yes'));
+
       template = Template.parse(
           context,
           Source(
@@ -207,13 +211,23 @@ void main() {
               '{% if a != "this" %}no{% elseif 7 > 4 %}yes{% else %}no{% endif %}',
               null));
       expect(template.render(context), equals('yes'));
+
       template = Template.parse(
           context,
           Source(
               null,
               '{% if e == null %}yes{% else %}no{% endif %}',
               null));
-      expect(template.render(context), equals('yes'));        
+      expect(template.render(context), equals('yes')); 
+
+      template = Template.parse(
+          context,
+          Source(
+              null,
+              '{% if numbers | size >= 3 %}{{numbers | size}}{% else %}0{% endif %}',
+              null));
+      expect(template.render(context), equals('3')); 
+
     });
 
     test('include', () {
