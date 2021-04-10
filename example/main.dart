@@ -1,6 +1,6 @@
 import 'package:liquid_engine/liquid_engine.dart';
 
-main() {
+void main() {
   final raw = '''
 <html>
   <title>{{ title | default: 'Liquid Example'}}</title>

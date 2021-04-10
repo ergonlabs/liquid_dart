@@ -5,7 +5,8 @@ class ParseException extends Error {
 
   ParseException(this.message);
 
-  String toString() => "Parse Exception: $message";
+  @override
+  String toString() => 'Parse Exception: $message';
 
   ParseException.unexpected(Token token, {dynamic expected})
       : this('Unexpected Token: $token expected $expected');

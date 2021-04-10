@@ -136,7 +136,7 @@ class BlockExpression implements Expression {
   BlockExpression.fromTags(List<Tag> tags) : this(Block(tags));
 
   @override
-  evaluate(RenderContext context) => block.render(context).join("");
+  String evaluate(RenderContext context) => block.render(context).join('');
 }
 
 class ExpressionTag implements Tag {

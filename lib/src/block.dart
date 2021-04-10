@@ -64,6 +64,7 @@ typedef Block SimpleBlockFactory(List<Token> tokens, List<Tag> children);
 
 class _SimpleBlockParser extends BlockParser {
   final SimpleBlockFactory factory;
+  @override
   final bool hasEndTag;
 
   _SimpleBlockParser(this.factory, this.hasEndTag);

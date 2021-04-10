@@ -14,7 +14,7 @@ class TagParser {
 
   Token get current => tokens.current;
 
-  moveNext() => tokens.moveNext();
+  bool moveNext() => tokens.moveNext();
 
   Expression parseBooleanExpression() {
     var exp = _parseAnd();

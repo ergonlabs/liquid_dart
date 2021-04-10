@@ -32,13 +32,13 @@ class BuiltinsModule implements Module {
     context.tags['extends'] = Extends.factory;
 
     context.filters['default'] = (input, args) {
-      var output = input != null ? input.toString() : "";
+      var output = input != null ? input.toString() : '';
       if (output.isNotEmpty) {
         return output;
       }
 
       for (final arg in args) {
-        output = arg != null ? arg.toString() : "";
+        output = arg != null ? arg.toString() : '';
         if (output.isNotEmpty) {
           return output;
         }

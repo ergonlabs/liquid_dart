@@ -17,7 +17,7 @@ class NamedBlock extends Block {
   }
 
   static SimpleBlockFactory get factory => (tokens, children) {
-        if (tokens.length == 0) {
+        if (tokens.isEmpty) {
           throw ParseException('{% block %} missing name');
         }
         if (tokens.length > 1) {

@@ -104,7 +104,9 @@ void main() {
       var template = Template.parse(
           context,
           Source(
-              null, '{% for x in potabo2 %} {{ x }} potabo{% else %}EMPTY!{% endfor %}', null));
+              null,
+              '{% for x in potabo2 %} {{ x }} potabo{% else %}EMPTY!{% endfor %}',
+              null));
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
@@ -150,11 +152,7 @@ void main() {
       final context = Context.create();
 
       var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% filter reverse%}nuf{% endfilter %}',
-              null));
+          context, Source(null, '{% filter reverse%}nuf{% endfilter %}', null));
 
       context.filters['reverse'] = (i, a) => reverse(i.toString());
 
@@ -187,6 +185,8 @@ void main() {
         'wat',
       ];
 
+      context.variables['e'] = null;
+
       var template = Template.parse(
           context, Source(null, '{% if a == "this" %}yes{% endif %}', null));
       expect(template.render(context), equals('yes'));
@@ -207,6 +207,13 @@ void main() {
               '{% if a != "this" %}no{% elseif 7 > 4 %}yes{% else %}no{% endif %}',
               null));
       expect(template.render(context), equals('yes'));
+      template = Template.parse(
+          context,
+          Source(
+              null,
+              '{% if e == null %}yes{% else %}no{% endif %}',
+              null));
+      expect(template.render(context), equals('yes'));        
     });
 
     test('include', () {
@@ -215,12 +222,12 @@ void main() {
         'name_snippet.html': '{{ greeting }}, {{ person|default:"friend" }}!',
         'simple': '{% include "name_snippet.html" %}',
         'args':
-        '{% include "name_snippet.html" with person="Jane" greeting="Howdy" %}',
+            '{% include "name_snippet.html" with person="Jane" greeting="Howdy" %}',
         'only': '{% include "name_snippet.html" with greeting="Hi" only %}',
       });
 
-      context.variables['person'] = "John";
-      context.variables['greeting'] = "Hello";
+      context.variables['person'] = 'John';
+      context.variables['greeting'] = 'Hello';
 
       var template = Template.parse(context, root.resolve('simple'));
       expect(template.render(context), equals('Hello, John!'));
@@ -250,9 +257,9 @@ void main() {
   });
 }
 
-reverse(String string) {
+String reverse(String string) {
   final sb = StringBuffer();
-  for (int i = string.length - 1; i >= 0; i--) {
+  for (var i = string.length - 1; i >= 0; i--) {
     sb.writeCharCode(string.codeUnitAt(i));
   }
   return sb.toString();

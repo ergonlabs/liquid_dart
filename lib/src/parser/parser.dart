@@ -61,7 +61,7 @@ class Parser {
             return;
           }
 
-          Token asTarget = null;
+          Token asTarget;
           if (args.length >= 2 &&
               args[args.length - 1].type == TokenType.identifier &&
               args[args.length - 2].value == 'as') {
@@ -102,9 +102,7 @@ class Parser {
   }
 
   void expect({List<TokenType> types, String value, Token token}) {
-    if (token == null) {
-      token = tokens.current;
-    }
+    token ??= tokens.current;
     if (types != null && !types.contains(token.type)) {
       throw ParseException.unexpected(token, expected: 'one of $types');
     }

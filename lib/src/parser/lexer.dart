@@ -44,7 +44,7 @@ class Lexer {
   final whitespace = RegExp(r'\s*');
 
   Iterable<Token> tokenize(Source source) sync* {
-    LineScanner ss = LineScanner(source.content, sourceUrl: source.file);
+    var ss = LineScanner(source.content, sourceUrl: source.file);
     ss.scan(whitespace);
     while (!ss.isDone) {
       var token = markup.scan(source, ss);

@@ -76,7 +76,7 @@ class DocumentParser extends BlockParser {
 
   @override
   Block create(List<Token> tokens, List<Tag> children) {
-    int start = 0;
+    var start = 0;
     DocumentFuture base;
     final loads = <String>[];
     if (children.isNotEmpty) {
