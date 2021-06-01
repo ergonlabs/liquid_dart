@@ -34,7 +34,7 @@ class AsBlock extends Block {
 }
 
 abstract class BlockParser {
-  ParseContext context;
+  ParseContext? context;
 
   Block create(List<Token> tokens, List<Tag> children);
 
@@ -58,12 +58,13 @@ abstract class BlockParser {
   bool get hasEndTag => true;
 }
 
-typedef BlockParser BlockParserFactory();
+typedef BlockParserFactory = BlockParser Function();
 
-typedef Block SimpleBlockFactory(List<Token> tokens, List<Tag> children);
+typedef SimpleBlockFactory = Block Function(List<Token> tokens, List<Tag> children);
 
 class _SimpleBlockParser extends BlockParser {
   final SimpleBlockFactory factory;
+  @override
   final bool hasEndTag;
 
   _SimpleBlockParser(this.factory, this.hasEndTag);

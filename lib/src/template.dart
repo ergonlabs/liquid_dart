@@ -4,20 +4,20 @@ import 'model.dart';
 import 'parser/parser.dart';
 
 extension JsSplit on String {
-  Iterable<String> inclusiveSplit(RegExp pattern) sync* {
+  Iterable<String?> inclusiveSplit(RegExp pattern) sync* {
     final matches = pattern.allMatches(this);
     var pos = 0;
 
     for (final match in matches) {
       if (match.start > pos) {
-        yield this.substring(pos, match.start);
+        yield substring(pos, match.start);
       }
-      yield match.group(0);
+      yield match.group(0)!;
       pos = match.end;
     }
 
-    if (pos < this.length - 1) {
-      yield this.substring(pos);
+    if (pos < length - 1) {
+      yield substring(pos);
     }
   }
 }

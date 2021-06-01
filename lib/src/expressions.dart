@@ -8,7 +8,7 @@ abstract class Expression {
   dynamic evaluate(RenderContext context);
 }
 
-typedef dynamic Operation(dynamic a, dynamic b);
+typedef Operation = dynamic Function(dynamic a, dynamic b);
 
 class BooleanCastExpression implements Expression {
   final Expression input;
@@ -16,7 +16,7 @@ class BooleanCastExpression implements Expression {
   BooleanCastExpression(this.input);
 
   @override
-  evaluate(RenderContext context) {
+  bool evaluate(RenderContext context) {
     bool _bool(dynamic a) {
       if (a == null) {
         return false;
@@ -42,7 +42,7 @@ class NotExpression extends BooleanCastExpression {
   NotExpression(Expression input) : super(input);
 
   @override
-  evaluate(RenderContext context) => !super.evaluate(context);
+  bool evaluate(RenderContext context) => !super.evaluate(context);
 }
 
 class BinaryOperation implements Expression {
@@ -52,6 +52,7 @@ class BinaryOperation implements Expression {
 
   BinaryOperation(this.operation, this.left, this.right);
 
+  @override
   dynamic evaluate(RenderContext context) =>
       operation(left.evaluate(context), right.evaluate(context));
 }
@@ -74,7 +75,7 @@ class ConstantExpression implements Expression {
   }
 
   @override
-  evaluate(RenderContext context) => value;
+  dynamic evaluate(RenderContext context) => value;
 }
 
 class LookupExpression implements Expression {
@@ -83,7 +84,7 @@ class LookupExpression implements Expression {
   LookupExpression(this.name);
 
   @override
-  evaluate(RenderContext context) {
+  dynamic evaluate(RenderContext context) {
     return context.variables[name.value];
   }
 }
@@ -95,7 +96,7 @@ class MemberExpression implements Expression {
   MemberExpression(this.base, this.member);
 
   @override
-  evaluate(RenderContext context) {
+  dynamic evaluate(RenderContext context) {
     final base = this.base.evaluate(context);
     if (base == null) {
       return null;
@@ -118,6 +119,7 @@ class FilterExpression implements Expression {
 
   FilterExpression(this.input, this.name, this.arguments);
 
+  @override
   dynamic evaluate(RenderContext context) {
     var output = input.evaluate(context);
     var filter = context.filters[name.value];
@@ -136,7 +138,7 @@ class BlockExpression implements Expression {
   BlockExpression.fromTags(List<Tag> tags) : this(Block(tags));
 
   @override
-  evaluate(RenderContext context) => block.render(context).join("");
+  String evaluate(RenderContext context) => block.render(context).join('');
 }
 
 class ExpressionTag implements Tag {

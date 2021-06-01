@@ -30,7 +30,7 @@ class DocumentFuture {
 }
 
 class Document extends Block {
-  DocumentFuture base;
+  DocumentFuture? base;
   List<String> loads;
 
   Document(this.base, this.loads, List<Tag> children) : super(children);
@@ -50,18 +50,18 @@ class Document extends Block {
     var baseContext = initialContext.cloneAsRoot();
     for (final tag in children) {
       if (tag is NamedBlock) {
-        baseContext.blocks[tag.name] = tag.render(context);
+        baseContext.blocks![tag.name] = tag.render(context);
       } else {
         tag.render(context);
       }
     }
-    return base.resolve(context).render(baseContext);
+    return base!.resolve(context).render(baseContext);
   }
 }
 
 class DocumentParser extends BlockParser {
   @override
-  bool approveTag(Token start, List<Tag> childrenSoFar, Token asToken) {
+  bool approveTag(Token start, List<Tag> childrenSoFar, Token? asToken) {
     if (start.value == 'extends') {
       return childrenSoFar.isEmpty;
     }
@@ -71,13 +71,13 @@ class DocumentParser extends BlockParser {
     if (childrenSoFar.isNotEmpty && childrenSoFar.first is Extends) {
       return asToken != null || start.value == 'block';
     }
-    return super.approveTag(start, childrenSoFar, asToken);
+    return super.approveTag(start, childrenSoFar, asToken!);
   }
 
   @override
   Block create(List<Token> tokens, List<Tag> children) {
-    int start = 0;
-    DocumentFuture base;
+    var start = 0;
+    DocumentFuture? base;
     final loads = <String>[];
     if (children.isNotEmpty) {
       if (children.length > start && children[start] is Extends) {
@@ -90,7 +90,7 @@ class DocumentParser extends BlockParser {
         start++;
       }
     }
-    return Document(base, loads, children.sublist(start));
+    return Document(base!, loads, children.sublist(start));
   }
 
   @override

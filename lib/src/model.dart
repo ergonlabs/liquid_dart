@@ -1,21 +1,21 @@
 import 'dart:io';
 
 class Root {
-  final Uri path;
+  final Uri? path;
 
   Root(this.path);
 
   Source resolve(String relPath) {
-    final file = path.resolve(relPath);
+    final file = path!.resolve(relPath);
     final content = File.fromUri(file).readAsStringSync();
     return Source(file, content, this);
   }
 }
 
 class Source {
-  final Uri file;
+  final Uri? file;
   final String content;
-  final Root root;
+  final Root? root;
 
   Source(this.file, this.content, this.root);
 
@@ -48,11 +48,11 @@ enum TokenType {
 }
 
 class Token {
-  final TokenType type;
+  final TokenType? type;
   final String value;
-  final Source source;
-  final int line;
-  final int column;
+  final Source? source;
+  final int? line;
+  final int? column;
 
   static Token eof = Token(null, '<EOF>');
 

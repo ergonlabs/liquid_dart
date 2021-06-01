@@ -18,7 +18,7 @@ class For extends Block {
 
   @override
   Iterable<String> render(RenderContext context) {
-    List collection = List.from(from.evaluate(context) ?? []);
+    var collection = List.from(from.evaluate(context) ?? []);
 
     if (collection.isEmpty) {
       return super.renderTags(context, elseChildren);
@@ -55,7 +55,7 @@ class For extends Block {
 }
 
 class _ForBlockParser extends BlockParser {
-  List<Tag> innerChildren;
+  List<Tag>? innerChildren;
 
   @override
   void start(context, args) {
@@ -67,7 +67,7 @@ class _ForBlockParser extends BlockParser {
   Block create(List<Token> tokens, List<Tag> children) {
     var parser = TagParser.from(tokens);
     parser.expect(types: [TokenType.identifier]);
-    final to = parser.current.value;
+    final to = parser.current!.value;
 
     parser.moveNext();
     parser.expect(types: [TokenType.identifier], value: 'in');
@@ -82,7 +82,7 @@ class _ForBlockParser extends BlockParser {
       Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     if (start.value == 'else' || start.value == 'empty') {
       if (innerChildren != null) {
-        throw ParseException("Only one {% else %} is allowed in a {% for %}");
+        throw ParseException('Only one {% else %} is allowed in a {% for %}');
       }
       innerChildren = List.from(childrenSoFar);
       childrenSoFar.clear();
