@@ -23,3 +23,6 @@ jobs:
 
       - name: Run tests
         run: dart test
+
+      - name: Run format
+        run: dart format -l 200 --set-exit-if-changed lib
