@@ -27,6 +27,34 @@ void main() {
       expect(template, hasLength(3));
     });
 
+    test('whitespace control - none', () {
+      var template = Lexer().tokenize(Source(null, '   {% if %}   ', null)).toList();
+
+      print(template);
+      expect(template, hasLength(5));
+    });
+
+    test('whitespace control - start', () {
+      var template = Lexer().tokenize(Source(null, '   {%- if %}   ', null)).toList();
+
+      print(template);
+      expect(template, hasLength(4));
+    });
+
+    test('whitespace control - end', () {
+      var template = Lexer().tokenize(Source(null, '   {% if -%}   ', null)).toList();
+
+      print(template);
+      expect(template, hasLength(4));
+    });
+
+    test('whitespace control - both', () {
+      var template = Lexer().tokenize(Source(null, '   {%- if -%}   ', null)).toList();
+
+      print(template);
+      expect(template, hasLength(3));
+    });
+
     test('var only', () {
       var template = Lexer().tokenize(Source(null, '{{ if }}', null)).toList();
 
@@ -52,7 +80,7 @@ void main() {
       var template = Lexer().tokenize(Source(null, ' {% if x | ifblank: "bob" %} {{ if | append: "secrets" }} ', null)).toList();
 
       print(template);
-      expect(template, hasLength(17));
+      expect(template, hasLength(18));
     });
   });
 }

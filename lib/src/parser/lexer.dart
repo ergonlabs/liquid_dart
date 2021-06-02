@@ -40,50 +40,53 @@ class Lexer {
     _TokenCreator(TokenType.question, r'\?'),
     _TokenCreator(TokenType.dash, '-'),
   ];
-  final markup = _TokenCreator(TokenType.markup, r'((?!{{)(?!{%).)+');
+  final markup = _TokenCreator(TokenType.markup, r'((?!{{)(?!{%)(?![\s\n\r]*{[{%]-).)+');
   final whitespace = RegExp(r'\s*');
 
   Iterable<Token> tokenize(Source source) sync* {
     var ss = LineScanner(source.content, sourceUrl: source.file);
-    ss.scan(whitespace);
     while (!ss.isDone) {
       var token = markup.scan(source, ss);
       if (token != null) {
         yield token;
       }
 
-      if (ss.matches('{%')) {
+      if (ss.matches(tagStart)) {
         yield* tokenizeTag(source, ss);
-      } else if (ss.matches('{{')) {
+      } else if (ss.matches(varStart)) {
         yield* tokenizeVar(source, ss);
       }
     }
   }
 
+  RegExp tagStart = RegExp(r'({%-?)|([\s\n\r]*{%-)');
+  RegExp tagEnd = RegExp(r'(%})|(-%}[\s\n\r]*)');
   Iterable<Token> tokenizeTag(Source source, LineScanner ss) =>
       tokenizeNonMarkup(
         source,
         ss,
         TokenType.tag_start,
-        '{%',
+        tagStart,
         TokenType.tag_end,
-        '%}',
+        tagEnd,
       );
 
+  RegExp varStart = RegExp(r'({{-?)|([\s\n\r]*{{-)');
+  RegExp varEnd = RegExp(r'(}})|(-}}[\s\n\r]*)');
   Iterable<Token> tokenizeVar(Source source, LineScanner ss) =>
       tokenizeNonMarkup(
         source,
         ss,
         TokenType.var_start,
-        '{{',
+        varStart,
         TokenType.var_end,
-        '}}',
+        varEnd,
       );
 
   Iterable<Token> tokenizeNonMarkup(Source source, LineScanner ss,
-      TokenType startType, String start, TokenType endType, String end) sync* {
+      TokenType startType, Pattern start, TokenType endType, Pattern end) sync* {
     ss.expect(start);
-    yield Token(startType, start,
+    yield Token(startType, ss.lastMatch!.group(0)!,
         source: source, line: ss.line, column: ss.column - 2);
 
     mainLoop:
@@ -103,7 +106,7 @@ class Lexer {
     }
 
     ss.expect(end);
-    yield Token(endType, end,
+    yield Token(endType, ss.lastMatch!.group(0)!,
         source: source, line: ss.line, column: ss.column - 2);
   }
 }
