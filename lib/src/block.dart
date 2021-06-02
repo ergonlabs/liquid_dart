@@ -12,8 +12,7 @@ class Block implements Tag {
   Block(this.children);
 
   @override
-  Stream<String> render(RenderContext context) =>
-      renderTags(context, children);
+  Stream<String> render(RenderContext context) => renderTags(context, children);
 
   Stream<String> renderTags(RenderContext context, Iterable<Tag> children) async* {
     for (final child in children) {
@@ -39,16 +38,13 @@ abstract class BlockParser {
 
   Block create(List<Token> tokens, List<Tag> children);
 
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
 
-  bool approveTag(Token start, List<Tag> childrenSoFar, Token? asToken) =>
-      start.value != 'extend' && start.value != 'load';
+  bool approveTag(Token start, List<Tag> childrenSoFar, Token? asToken) => start.value != 'extend' && start.value != 'load';
 
   BlockParser();
 
-  static BlockParserFactory simple(SimpleBlockFactory factory,
-      {hasEndTag = true}) {
+  static BlockParserFactory simple(SimpleBlockFactory factory, {hasEndTag = true}) {
     return () => _SimpleBlockParser(factory, hasEndTag);
   }
 
@@ -61,8 +57,7 @@ abstract class BlockParser {
 
 typedef BlockParserFactory = BlockParser Function();
 
-typedef SimpleBlockFactory = Block Function(
-    List<Token> tokens, List<Tag> children);
+typedef SimpleBlockFactory = Block Function(List<Token> tokens, List<Tag> children);
 
 class _SimpleBlockParser extends BlockParser {
   final SimpleBlockFactory factory;
@@ -72,12 +67,10 @@ class _SimpleBlockParser extends BlockParser {
   _SimpleBlockParser(this.factory, this.hasEndTag);
 
   @override
-  Block create(List<Token> tokens, List<Tag> children) =>
-      factory(tokens, children);
+  Block create(List<Token> tokens, List<Tag> children) => factory(tokens, children);
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     throw ParseException.unexpected(start);
   }
 }

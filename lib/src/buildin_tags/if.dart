@@ -40,8 +40,7 @@ class _IfBlockParser extends BlockParser {
 
   @override
   Block create(List<Token> tokens, List<Tag> children) {
-    conditions.add(MapEntry(
-        lastExpression ?? ConstantExpression(true), List.from(children)));
+    conditions.add(MapEntry(lastExpression ?? ConstantExpression(true), List.from(children)));
     return createFromConditions(conditions);
   }
 
@@ -50,12 +49,10 @@ class _IfBlockParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     if (start.value == 'elseif') {
       if (lastExpression == null) {
-        throw ParseException.unexpected(start,
-            expected: '{% elseif %} must preced {% else %}');
+        throw ParseException.unexpected(start, expected: '{% elseif %} must preced {% else %}');
       }
       conditions.add(MapEntry(lastExpression!, List.from(childrenSoFar)));
       childrenSoFar.clear();
@@ -68,8 +65,7 @@ class _IfBlockParser extends BlockParser {
       childrenSoFar.clear();
       lastExpression = null;
     } else {
-      throw ParseException.unexpected(start,
-          expected: '{% elseif %} or {% else %} or {% endif %}');
+      throw ParseException.unexpected(start, expected: '{% elseif %} or {% else %} or {% endif %}');
     }
   }
 }

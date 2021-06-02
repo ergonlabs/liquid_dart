@@ -16,6 +16,5 @@ class IfChanged extends Block {
     yield result;
   }
 
-  static final SimpleBlockFactory factory =
-      (tokens, children) => IfChanged(children);
+  static final SimpleBlockFactory factory = (tokens, children) => IfChanged(children);
 }

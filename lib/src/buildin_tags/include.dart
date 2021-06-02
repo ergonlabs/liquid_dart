@@ -12,8 +12,7 @@ class Include extends Block {
   final bool clearVariables;
   final DocumentFuture childBuilder;
 
-  Include._(this.assignments, this.clearVariables, this.childBuilder)
-      : super([]);
+  Include._(this.assignments, this.clearVariables, this.childBuilder) : super([]);
 
   @override
   Stream<String> render(RenderContext context) async* {
@@ -22,13 +21,14 @@ class Include extends Block {
       innerContext = innerContext.clone();
       innerContext.variables.clear();
     }
+
     /// [old]
     // innerContext = innerContext.push(Map.fromIterable(
     //   assignments,
     //   key: (a) => a.to,
     //   value: (a) => a.from.evaluate(context),
     // ));
-    innerContext = innerContext.push({ for (var a in assignments) a.to : a.from.evaluate(context) });
+    innerContext = innerContext.push({for (var a in assignments) a.to: a.from.evaluate(context)});
 
     yield* (await childBuilder.resolve(context)).render(innerContext);
   }
@@ -55,8 +55,7 @@ class _IncludeBlockParser extends BlockParser {
     final assignments = <_Assign>[];
     if (parser.current.value == 'with') {
       parser.moveNext();
-      while (parser.current.type == TokenType.identifier &&
-          parser.current.value != 'only') {
+      while (parser.current.type == TokenType.identifier && parser.current.value != 'only') {
         parser.expect(types: [TokenType.identifier]);
         final to = parser.current;
 
@@ -75,6 +74,5 @@ class _IncludeBlockParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
 }

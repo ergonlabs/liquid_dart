@@ -30,6 +30,5 @@ class _BlockParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
 }

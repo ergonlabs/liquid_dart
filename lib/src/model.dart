@@ -5,7 +5,7 @@ class Root {
 
   Root(this.path);
 
-  Future<Source> resolve(String relPath)async  {
+  Future<Source> resolve(String relPath) async {
     final file = path.resolve(relPath);
     final content = await File.fromUri(file).readAsString();
     return Source(file, content, this);

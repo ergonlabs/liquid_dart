@@ -28,8 +28,7 @@ class Template {
 
   Template(this.source, this.document);
 
-  factory Template.parse(ParseContext context, Source source) =>
-      Template(source, Parser(context, source).parse());
+  factory Template.parse(ParseContext context, Source source) => Template(source, Parser(context, source).parse());
 
   Future<String> render(Context context) async {
     final buffer = StringBuffer();

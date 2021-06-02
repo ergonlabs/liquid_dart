@@ -13,15 +13,13 @@ class Parser {
   final Iterator<Token> tokens;
   final ParseContext context;
 
-  Parser(this.context, this.source)
-      : tokens = Lexer().tokenize(source).iterator;
+  Parser(this.context, this.source) : tokens = Lexer().tokenize(source).iterator;
 
   Document parse() {
     return parseBlock(DocumentParser(), [], '<doc>', null) as Document;
   }
 
-  Block parseBlock(
-      BlockParser builder, List<Token> args, String start, Token? asTarget) {
+  Block parseBlock(BlockParser builder, List<Token> args, String start, Token? asTarget) {
     var innerChildren = <Tag>[];
     builder.start(context, args);
     if (builder.hasEndTag) {
@@ -52,8 +50,7 @@ class Parser {
           expect(types: [TokenType.identifier]);
           final start = tokens.current;
           final args = <Token>[];
-          while (
-              tokens.moveNext() && tokens.current.type != TokenType.tag_end) {
+          while (tokens.moveNext() && tokens.current.type != TokenType.tag_end) {
             args.add(tokens.current);
           }
 
@@ -62,9 +59,7 @@ class Parser {
           }
 
           Token? asTarget;
-          if (args.length >= 2 &&
-              args[args.length - 1].type == TokenType.identifier &&
-              args[args.length - 2].value == 'as') {
+          if (args.length >= 2 && args[args.length - 1].type == TokenType.identifier && args[args.length - 2].value == 'as') {
             asTarget = args.last;
             args.length = args.length - 2;
           }

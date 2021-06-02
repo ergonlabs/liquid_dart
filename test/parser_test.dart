@@ -5,7 +5,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('parser tests', () {
-
     test('markup only', () {
       var template = Lexer().tokenize(Source(null, 'static markup', null)).toList();
 

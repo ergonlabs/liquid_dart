@@ -74,13 +74,11 @@ class _ForBlockParser extends BlockParser {
     parser.expect(types: [TokenType.identifier], value: 'in');
 
     parser.moveNext();
-    return For(to, parser.parseFilterExpression(), innerChildren ?? children,
-        innerChildren != null ? children : []);
+    return For(to, parser.parseFilterExpression(), innerChildren ?? children, innerChildren != null ? children : []);
   }
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     if (start.value == 'else' || start.value == 'empty') {
       if (innerChildren != null) {
         throw ParseException('Only one {% else %} is allowed in a {% for %}');
@@ -88,8 +86,7 @@ class _ForBlockParser extends BlockParser {
       innerChildren = List.from(childrenSoFar);
       childrenSoFar.clear();
     } else {
-      throw ParseException.unexpected(start,
-          expected: '{% else %} or {% endfor %}');
+      throw ParseException.unexpected(start, expected: '{% else %} or {% endfor %}');
     }
   }
 }

@@ -6,15 +6,13 @@ class _TokenCreator {
   final TokenType type;
   final RegExp pattern;
 
-  _TokenCreator(this.type, String pattern)
-      : pattern = RegExp(pattern, dotAll: true);
+  _TokenCreator(this.type, String pattern) : pattern = RegExp(pattern, dotAll: true);
 
   Token? scan(Source source, LineScanner ss) {
     final line = ss.line;
     final column = ss.column;
     if (ss.scan(pattern)) {
-      return Token(type, ss.lastMatch!.group(0)!,
-          source: source, line: line, column: column);
+      return Token(type, ss.lastMatch!.group(0)!, source: source, line: line, column: column);
     }
     return null;
   }
@@ -61,8 +59,7 @@ class Lexer {
 
   RegExp tagStart = RegExp(r'({%-?)|([\s\n\r]*{%-)');
   RegExp tagEnd = RegExp(r'(%})|(-%}[\s\n\r]*)');
-  Iterable<Token> tokenizeTag(Source source, LineScanner ss) =>
-      tokenizeNonMarkup(
+  Iterable<Token> tokenizeTag(Source source, LineScanner ss) => tokenizeNonMarkup(
         source,
         ss,
         TokenType.tag_start,
@@ -73,8 +70,7 @@ class Lexer {
 
   RegExp varStart = RegExp(r'({{-?)|([\s\n\r]*{{-)');
   RegExp varEnd = RegExp(r'(}})|(-}}[\s\n\r]*)');
-  Iterable<Token> tokenizeVar(Source source, LineScanner ss) =>
-      tokenizeNonMarkup(
+  Iterable<Token> tokenizeVar(Source source, LineScanner ss) => tokenizeNonMarkup(
         source,
         ss,
         TokenType.var_start,
@@ -83,11 +79,9 @@ class Lexer {
         varEnd,
       );
 
-  Iterable<Token> tokenizeNonMarkup(Source source, LineScanner ss,
-      TokenType startType, Pattern start, TokenType endType, Pattern end) sync* {
+  Iterable<Token> tokenizeNonMarkup(Source source, LineScanner ss, TokenType startType, Pattern start, TokenType endType, Pattern end) sync* {
     ss.expect(start);
-    yield Token(startType, ss.lastMatch!.group(0)!,
-        source: source, line: ss.line, column: ss.column - 2);
+    yield Token(startType, ss.lastMatch!.group(0)!, source: source, line: ss.line, column: ss.column - 2);
 
     mainLoop:
     while (ss.scan(whitespace) && !ss.matches(end)) {
@@ -106,7 +100,6 @@ class Lexer {
     }
 
     ss.expect(end);
-    yield Token(endType, ss.lastMatch!.group(0)!,
-        source: source, line: ss.line, column: ss.column - 2);
+    yield Token(endType, ss.lastMatch!.group(0)!, source: source, line: ss.line, column: ss.column - 2);
   }
 }

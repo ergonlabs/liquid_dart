@@ -52,9 +52,7 @@ class Context implements RenderContext, ParseContext {
   Map<Tag, Map<String, dynamic>> tagStates = {};
 
   @override
-  Map<String, dynamic> getTagState(Tag tag) => parent == null
-      ? tagStates.putIfAbsent(tag, () => {})
-      : root.getTagState(tag);
+  Map<String, dynamic> getTagState(Tag tag) => parent == null ? tagStates.putIfAbsent(tag, () => {}) : root.getTagState(tag);
 
   @override
   final Context? parent;

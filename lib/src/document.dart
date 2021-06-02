@@ -101,8 +101,7 @@ class DocumentParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     throw ParseException.unexpected(start);
   }
 }
