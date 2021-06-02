@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import './tag.dart';
 import 'context.dart';
 import 'errors.dart';
@@ -10,11 +12,10 @@ class Block implements Tag {
   Block(this.children);
 
   @override
-  Iterable<String> render(RenderContext context) =>
+  Stream<String> render(RenderContext context) =>
       renderTags(context, children);
 
-  Iterable<String> renderTags(
-      RenderContext context, Iterable<Tag> children) sync* {
+  Stream<String> renderTags(RenderContext context, Iterable<Tag> children) async* {
     for (final child in children) {
       yield* child.render(context);
     }
@@ -27,9 +28,9 @@ class AsBlock extends Block {
   AsBlock(this.to, List<Tag> children) : super(children);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) {
     context.variables[to] = super.render(context).join();
-    return Iterable.empty();
+    return Stream.empty();
   }
 }
 
@@ -60,7 +61,8 @@ abstract class BlockParser {
 
 typedef BlockParserFactory = BlockParser Function();
 
-typedef SimpleBlockFactory = Block Function(List<Token> tokens, List<Tag> children);
+typedef SimpleBlockFactory = Block Function(
+    List<Token> tokens, List<Tag> children);
 
 class _SimpleBlockParser extends BlockParser {
   final SimpleBlockFactory factory;

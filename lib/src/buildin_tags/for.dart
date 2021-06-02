@@ -17,17 +17,18 @@ class For extends Block {
   For(this.to, this.from, this.innerChildren, this.elseChildren) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
-    var collection = List.from(from.evaluate(context) ?? []);
+  Stream<String> render(RenderContext context) async* {
+    var collection = List.from(await from.evaluate(context) ?? []);
 
     if (collection.isEmpty) {
-      return super.renderTags(context, elseChildren);
+      yield* super.renderTags(context, elseChildren);
+      return;
     }
 
     var parentLoop = context.variables['forloop'];
 
     var index = 0;
-    return collection.map<Iterable<String>>((item) {
+    for (final item in collection) {
       final innerContext = context.push({
         to: item,
         'forloop': {
@@ -47,8 +48,8 @@ class For extends Block {
         }
       });
       index++;
-      return super.renderTags(innerContext, innerChildren);
-    }).flatten();
+      yield* super.renderTags(innerContext, innerChildren);
+    }
   }
 
   static final BlockParserFactory factory = () => _ForBlockParser();

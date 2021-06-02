@@ -9,7 +9,7 @@ abstract class RenderContext {
 
   RenderContext get root;
 
-  Map<String, Iterable<String>> get blocks;
+  Map<String, String> get blocks;
 
   Map<String, dynamic> get variables;
 
@@ -36,7 +36,7 @@ abstract class Module {
 
 class Context implements RenderContext, ParseContext {
   @override
-  Map<String, Iterable<String>> blocks = {};
+  Map<String, String> blocks = {};
 
   @override
   Map<String, BlockParserFactory> tags = {};

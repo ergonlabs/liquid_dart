@@ -10,8 +10,8 @@ class FilterBlock extends Block {
   FilterBlock(this.input) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
-    return [input.evaluate(context)];
+  Stream<String> render(RenderContext context) async* {
+    yield (await input.evaluate(context))?.toString() ?? '';
   }
 
   static final SimpleBlockFactory factory = (tokens, children) {

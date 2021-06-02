@@ -12,8 +12,8 @@ class Extends extends Block {
   Extends._(this.base) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
-    return Iterable.empty();
+  Stream<String> render(RenderContext context) {
+    return Stream.empty();
   }
 
   static BlockParserFactory factory = () => _BlockParser();

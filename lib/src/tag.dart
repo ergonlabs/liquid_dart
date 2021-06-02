@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'context.dart';
 
 abstract class Tag {
-  Iterable<String> render(RenderContext context);
+  Stream<String> render(RenderContext context);
 }
 
 class TagStatic implements Tag {
@@ -10,5 +12,5 @@ class TagStatic implements Tag {
   TagStatic(this.value);
 
   @override
-  Iterable<String> render(RenderContext context) => [value];
+  Stream<String> render(RenderContext context) => Stream.fromIterable([value]);
 }

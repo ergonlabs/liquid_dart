@@ -1,13 +1,13 @@
 import 'dart:io';
 
 class Root {
-  final Uri? path;
+  final Uri path;
 
   Root(this.path);
 
-  Source resolve(String relPath) {
-    final file = path!.resolve(relPath);
-    final content = File.fromUri(file).readAsStringSync();
+  Future<Source> resolve(String relPath)async  {
+    final file = path.resolve(relPath);
+    final content = await File.fromUri(file).readAsString();
     return Source(file, content, this);
   }
 }

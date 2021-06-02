@@ -13,14 +13,14 @@ class If extends Block {
   If(this.conditions) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) async* {
     for (final condition in conditions) {
-      final test = condition.key.evaluate(context);
+      final test = await condition.key.evaluate(context);
       if (test) {
-        return renderTags(context, condition.value);
+        yield* renderTags(context, condition.value);
+        return;
       }
     }
-    return Iterable.empty();
   }
 
   static final BlockParserFactory factory = () => _IfBlockParser();

@@ -7,25 +7,25 @@ import 'package:test/test.dart';
 
 void main() {
   group('tests', () {
-    test('First Test', () {
+    test('First Test', () async {
       final context = Context.create();
 
       var template =
           Template.parse(context, Source(null, 'static markup', null));
 
-      expect(template.render(context), equals('static markup'));
+      expect(await template.render(context), equals('static markup'));
     });
 
-    test('missing var', () {
+    test('missing var', () async {
       final context = Context.create();
 
       var template = Template.parse(
           context, Source(null, 'static {{ missing }} markup', null));
 
-      expect(template.render(context), equals('static  markup'));
+      expect(await template.render(context), equals('static  markup'));
     });
 
-    test('valid var', () {
+    test('valid var', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -33,10 +33,10 @@ void main() {
 
       context.variables['variable'] = 'fun';
 
-      expect(template.render(context), equals('static fun markup'));
+      expect(await template.render(context), equals('static fun markup'));
     });
 
-    test('string var', () {
+    test('string var', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -44,10 +44,10 @@ void main() {
 
       context.variables['variable'] = 'fun';
 
-      expect(template.render(context), equals('static variable markup'));
+      expect(await template.render(context), equals('static variable markup'));
     });
 
-    test('assign', () {
+    test('assign', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -59,10 +59,10 @@ void main() {
 
       context.variables['variable'] = 'badtimes';
 
-      expect(template.render(context), equals('static fun markup'));
+      expect(await template.render(context), equals('static fun markup'));
     });
 
-    test('bad assign', () {
+    test('bad assign', () async {
       final context = Context.create();
 
       expect(
@@ -71,7 +71,7 @@ void main() {
       );
     });
 
-    test('capture', () {
+    test('capture', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -83,19 +83,19 @@ void main() {
 
       context.variables['variable'] = 'badtimes';
 
-      expect(template.render(context), equals('static markup'));
+      expect(await template.render(context), equals('static markup'));
     });
 
-    test('comment', () {
+    test('comment', () async {
       final context = Context.create();
 
       var template = Template.parse(context,
           Source(null, '{% comment %}markup{% endcomment %}static', null));
 
-      expect(template.render(context), equals('static'));
+      expect(await template.render(context), equals('static'));
     });
 
-    test('for', () {
+    test('for', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -105,10 +105,10 @@ void main() {
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
-      expect(template.render(context), equals(' a potabo 4 potabo 4.5 potabo'));
+      expect(await template.render(context), equals(' a potabo 4 potabo 4.5 potabo'));
     });
 
-    test('for empty', () {
+    test('for empty', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -120,10 +120,10 @@ void main() {
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
-      expect(template.render(context), equals('EMPTY!'));
+      expect(await template.render(context), equals('EMPTY!'));
     });
 
-    test('cycle', () {
+    test('cycle', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -133,10 +133,10 @@ void main() {
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
-      expect(template.render(context), equals(' 1 2 3'));
+      expect(await template.render(context), equals(' 1 2 3'));
     });
 
-    test('expressions', () {
+    test('expressions', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -155,10 +155,25 @@ void main() {
         'wat',
       ];
 
-      expect(template.render(context), equals('this so is fun'));
+      expect(await template.render(context), equals('this so is fun'));
     });
 
-    test('filter', () {
+    test('builtins', () async {
+      final context = Context.create();
+
+      var template = Template.parse(
+          context,
+          Source(
+              null,
+              '{{ "" | default: "default" }} {{ null | default_if_none: "null" }} {{ list | size }} {{ "upper" | upper }} {{ "lower" | lower }} {{ "capfirst" | capfirst }}',
+              null));
+      context.variables['null'] = null;
+      context.variables['list'] = [1,2,3];
+
+      expect(await template.render(context), equals('default null 3 UPPER lower Capfirst'));
+    });
+
+    test('filter', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -166,10 +181,10 @@ void main() {
 
       context.filters['reverse'] = (i, a) => reverse(i.toString());
 
-      expect(template.render(context), equals('fun'));
+      expect(await template.render(context), equals('fun'));
     });
 
-    test('as', () {
+    test('as', () async {
       final context = Context.create();
 
       var template = Template.parse(
@@ -181,10 +196,10 @@ void main() {
 
       context.filters['reverse'] = (i, a) => reverse(i.toString());
 
-      expect(template.render(context), equals('fun fun'));
+      expect(await template.render(context), equals('fun fun'));
     });
 
-    test('if', () {
+    test('if', () async {
       final context = Context.create();
 
       context.variables['a'] = 'this';
@@ -197,27 +212,27 @@ void main() {
 
       var template = Template.parse(
           context, Source(null, '{% if a == "this" %}yes{% endif %}', null));
-      expect(template.render(context), equals('yes'));
+      expect(await template.render(context), equals('yes'));
       template = Template.parse(context,
           Source(null, '{% if a != "this" %}no{% else %}yes{% endif %}', null));
-      expect(template.render(context), equals('yes'));
+      expect(await template.render(context), equals('yes'));
       template = Template.parse(
           context,
           Source(
               null,
               '{% if a != "this" %}no{% elseif true %}yes{% else %}no{% endif %}',
               null));
-      expect(template.render(context), equals('yes'));
+      expect(await template.render(context), equals('yes'));
       template = Template.parse(
           context,
           Source(
               null,
               '{% if a != "this" %}no{% elseif 7 > 4 %}yes{% else %}no{% endif %}',
               null));
-      expect(template.render(context), equals('yes'));
+      expect(await template.render(context), equals('yes'));
     });
 
-    test('include', () {
+    test('include', () async {
       final context = Context.create();
       final root = TestRoot({
         'name_snippet.html': '{{ greeting }}, {{ person|default:"friend" }}!',
@@ -230,15 +245,15 @@ void main() {
       context.variables['person'] = 'John';
       context.variables['greeting'] = 'Hello';
 
-      var template = Template.parse(context, root.resolve('simple'));
-      expect(template.render(context), equals('Hello, John!'));
-      template = Template.parse(context, root.resolve('args'));
-      expect(template.render(context), equals('Howdy, Jane!'));
-      template = Template.parse(context, root.resolve('only'));
-      expect(template.render(context), equals('Hi, friend!'));
+      var template = Template.parse(context, await root.resolve('simple'));
+      expect(await template.render(context), equals('Hello, John!'));
+      template = Template.parse(context, await root.resolve('args'));
+      expect(await template.render(context), equals('Howdy, Jane!'));
+      template = Template.parse(context, await root.resolve('only'));
+      expect(await template.render(context), equals('Hi, friend!'));
     });
 
-    test('extends', () {
+    test('extends', () async {
       final context = Context.create();
       final root = TestRoot({
         'base2': 'outer == {% block fun %}base2{% endblock %}',
@@ -248,12 +263,12 @@ void main() {
 
       context.variables['base_var'] = 'base2';
 
-      var template = Template.parse(context, root.resolve('base0'));
-      expect(template.render(context), equals('outer == base0'));
-      template = Template.parse(context, root.resolve('base1'));
-      expect(template.render(context), equals('outer == base1'));
-      template = Template.parse(context, root.resolve('base2'));
-      expect(template.render(context), equals('outer == base2'));
+      var template = Template.parse(context, await root.resolve('base0'));
+      expect(await template.render(context), equals('outer == base0'));
+      template = Template.parse(context, await root.resolve('base1'));
+      expect(await template.render(context), equals('outer == base1'));
+      template = Template.parse(context, await root.resolve('base2'));
+      expect(await template.render(context), equals('outer == base2'));
     });
   });
 }
@@ -272,10 +287,10 @@ class TestRoot implements Root {
   TestRoot(this.files);
 
   @override
-  Uri? get path => null;
+  Uri get path => Uri.parse('file:///unknown');
 
   @override
-  Source resolve(String relPath) {
+  Future<Source> resolve(String relPath) async {
     return Source(null, files[relPath]!, this);
   }
 }

@@ -16,7 +16,7 @@ class Include extends Block {
       : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) async* {
     var innerContext = context;
     if (clearVariables) {
       innerContext = innerContext.clone();
@@ -30,7 +30,7 @@ class Include extends Block {
     // ));
     innerContext = innerContext.push({ for (var a in assignments) a.to : a.from.evaluate(context) });
 
-    return childBuilder.resolve(context).render(innerContext);
+    yield* (await childBuilder.resolve(context)).render(innerContext);
   }
 
   static BlockParserFactory factory = () => _IncludeBlockParser();

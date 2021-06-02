@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import './errors.dart';
 import 'block.dart';
 import 'context.dart';
@@ -5,7 +7,7 @@ import 'model.dart';
 import 'tag.dart';
 
 abstract class Expression {
-  dynamic evaluate(RenderContext context);
+  Future<dynamic> evaluate(RenderContext context);
 }
 
 typedef Operation = dynamic Function(dynamic a, dynamic b);
@@ -16,7 +18,7 @@ class BooleanCastExpression implements Expression {
   BooleanCastExpression(this.input);
 
   @override
-  bool evaluate(RenderContext context) {
+  Future<bool> evaluate(RenderContext context) async {
     bool _bool(dynamic a) {
       if (a == null) {
         return false;
@@ -34,7 +36,7 @@ class BooleanCastExpression implements Expression {
       return true;
     }
 
-    return _bool(input.evaluate(context));
+    return _bool(await input.evaluate(context));
   }
 }
 
@@ -42,7 +44,7 @@ class NotExpression extends BooleanCastExpression {
   NotExpression(Expression input) : super(input);
 
   @override
-  bool evaluate(RenderContext context) => !super.evaluate(context);
+  Future<bool> evaluate(RenderContext context) async => !(await super.evaluate(context));
 }
 
 class BinaryOperation implements Expression {
@@ -53,8 +55,8 @@ class BinaryOperation implements Expression {
   BinaryOperation(this.operation, this.left, this.right);
 
   @override
-  dynamic evaluate(RenderContext context) =>
-      operation(left.evaluate(context), right.evaluate(context));
+  Future<dynamic> evaluate(RenderContext context) async =>
+      operation(await left.evaluate(context), await right.evaluate(context));
 }
 
 class ConstantExpression implements Expression {
@@ -75,7 +77,7 @@ class ConstantExpression implements Expression {
   }
 
   @override
-  dynamic evaluate(RenderContext context) => value;
+  Future<dynamic> evaluate(RenderContext context) async => value;
 }
 
 class LookupExpression implements Expression {
@@ -84,7 +86,7 @@ class LookupExpression implements Expression {
   LookupExpression(this.name);
 
   @override
-  dynamic evaluate(RenderContext context) {
+  Future<dynamic> evaluate(RenderContext context) async {
     return context.variables[name.value];
   }
 }
@@ -96,8 +98,8 @@ class MemberExpression implements Expression {
   MemberExpression(this.base, this.member);
 
   @override
-  dynamic evaluate(RenderContext context) {
-    final base = this.base.evaluate(context);
+  Future<dynamic> evaluate(RenderContext context) async {
+    final base = await this.base.evaluate(context);
     if (base == null) {
       return null;
     }
@@ -120,14 +122,16 @@ class FilterExpression implements Expression {
   FilterExpression(this.input, this.name, this.arguments);
 
   @override
-  dynamic evaluate(RenderContext context) {
-    var output = input.evaluate(context);
+  Future<dynamic> evaluate(RenderContext context) async {
+    var output = await input.evaluate(context);
     var filter = context.filters[name.value];
     if (filter == null) {
       throw ParseException.unexpected(name);
     }
-    return filter(output, arguments.map((e) => e.evaluate(context)).toList());
+    return filter(output, await Future.wait(arguments.map((e) => _evaluateToFuture(e, context))));
   }
+
+  Future<dynamic> _evaluateToFuture(Expression e, RenderContext context) async => await e.evaluate(context);
 }
 
 class BlockExpression implements Expression {
@@ -138,15 +142,15 @@ class BlockExpression implements Expression {
   BlockExpression.fromTags(List<Tag> tags) : this(Block(tags));
 
   @override
-  String evaluate(RenderContext context) => block.render(context).join('');
+  Future<String> evaluate(RenderContext context) => block.render(context).join('');
 }
 
 class ExpressionTag implements Tag {
   Expression expression;
 
   @override
-  Iterable<String> render(RenderContext context) sync* {
-    var output = expression.evaluate(context);
+  Stream<String> render(RenderContext context) async* {
+    var output = await expression.evaluate(context);
     yield output != null ? output.toString() : '';
   }
 
