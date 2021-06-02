@@ -1,7 +1,15 @@
+## 0.2.1
+
+- support for `true` and `false`
+- support for whitespace control
+- async rendering 
+- web support
+- a few minor bug fixes
+
 ## 0.2.0
 
 - null safety
-_ a few minor bug fixes
+- a few minor bug fixes
 
 ## 0.1.0
 

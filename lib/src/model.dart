@@ -1,15 +1,9 @@
 import 'dart:io';
 
-class Root {
-  final Uri path;
+export 'model_web.dart' if (dart.library.io) 'model_io.dart';
 
-  Root(this.path);
-
-  Future<Source> resolve(String relPath) async {
-    final file = path.resolve(relPath);
-    final content = await File.fromUri(file).readAsString();
-    return Source(file, content, this);
-  }
+abstract class Root {
+  Future<Source> resolve(String relPath);
 }
 
 class Source {
