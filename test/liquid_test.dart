@@ -10,8 +10,7 @@ void main() {
     test('First Test', () async {
       final context = Context.create();
 
-      var template =
-          Template.parse(context, Source(null, 'static markup', null));
+      var template = Template.parse(context, Source(null, 'static markup', null));
 
       expect(await template.render(context), equals('static markup'));
     });
@@ -19,8 +18,7 @@ void main() {
     test('missing var', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context, Source(null, 'static {{ missing }} markup', null));
+      var template = Template.parse(context, Source(null, 'static {{ missing }} markup', null));
 
       expect(await template.render(context), equals('static  markup'));
     });
@@ -28,8 +26,7 @@ void main() {
     test('valid var', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context, Source(null, 'static {{ variable }} markup', null));
+      var template = Template.parse(context, Source(null, 'static {{ variable }} markup', null));
 
       context.variables['variable'] = 'fun';
 
@@ -56,8 +53,7 @@ void main() {
     test('string var', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context, Source(null, 'static {{ "variable" }} markup', null));
+      var template = Template.parse(context, Source(null, 'static {{ "variable" }} markup', null));
 
       context.variables['variable'] = 'fun';
 
@@ -67,12 +63,7 @@ void main() {
     test('assign', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% assign variable = "fun" %}static {{ variable }} markup{% endassign %}',
-              null));
+      var template = Template.parse(context, Source(null, '{% assign variable = "fun" %}static {{ variable }} markup{% endassign %}', null));
 
       context.variables['variable'] = 'badtimes';
 
@@ -91,12 +82,7 @@ void main() {
     test('capture', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% capture variable %}markup{% endcapture %}static {{ variable }}',
-              null));
+      var template = Template.parse(context, Source(null, '{% capture variable %}markup{% endcapture %}static {{ variable }}', null));
 
       context.variables['variable'] = 'badtimes';
 
@@ -106,8 +92,7 @@ void main() {
     test('comment', () async {
       final context = Context.create();
 
-      var template = Template.parse(context,
-          Source(null, '{% comment %}markup{% endcomment %}static', null));
+      var template = Template.parse(context, Source(null, '{% comment %}markup{% endcomment %}static', null));
 
       expect(await template.render(context), equals('static'));
     });
@@ -115,26 +100,17 @@ void main() {
     test('for', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context,
-          Source(
-              null, '{% for x in potabo %} {{ x }} potabo{% endfor %}', null));
+      var template = Template.parse(context, Source(null, '{% for x in potabo %} {{ x }} potabo{% endfor %}', null));
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
-      expect(await template.render(context),
-          equals(' a potabo 4 potabo 4.5 potabo'));
+      expect(await template.render(context), equals(' a potabo 4 potabo 4.5 potabo'));
     });
 
     test('for empty', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% for x in potabo2 %} {{ x }} potabo{% else %}EMPTY!{% endfor %}',
-              null));
+      var template = Template.parse(context, Source(null, '{% for x in potabo2 %} {{ x }} potabo{% else %}EMPTY!{% endfor %}', null));
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
@@ -144,10 +120,7 @@ void main() {
     test('cycle', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context,
-          Source(null, '{% for x in potabo %} {% cycle 1, 2, 3 %}{% endfor %}',
-              null));
+      var template = Template.parse(context, Source(null, '{% for x in potabo %} {% cycle 1, 2, 3 %}{% endfor %}', null));
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
@@ -157,12 +130,7 @@ void main() {
     test('expressions', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{{ a }} {{ d.1 }} {{ b.a }} {{ "nuf" | reverse }}{{ c }}{{ c.c }}',
-              null));
+      var template = Template.parse(context, Source(null, '{{ a }} {{ d.1 }} {{ b.a }} {{ "nuf" | reverse }}{{ c }}{{ c.c }}', null));
 
       context.filters['reverse'] = (i, a) => reverse(i.toString());
       context.variables['a'] = 'this';
@@ -180,23 +148,17 @@ void main() {
       final context = Context.create();
 
       var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{{ "" | default: "default" }} {{ null | default_if_none: "null" }} {{ list | size }} {{ "upper" | upper }} {{ "lower" | lower }} {{ "capfirst" | capfirst }}',
-              null));
+          context, Source(null, '{{ "" | default: "default" }} {{ null | default_if_none: "null" }} {{ list | size }} {{ "upper" | upper }} {{ "lower" | lower }} {{ "capfirst" | capfirst }}', null));
       context.variables['null'] = null;
       context.variables['list'] = [1, 2, 3];
 
-      expect(await template.render(context),
-          equals('default null 3 UPPER lower Capfirst'));
+      expect(await template.render(context), equals('default null 3 UPPER lower Capfirst'));
     });
 
     test('filter', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context, Source(null, '{% filter reverse%}nuf{% endfilter %}', null));
+      var template = Template.parse(context, Source(null, '{% filter reverse%}nuf{% endfilter %}', null));
 
       context.filters['reverse'] = (i, a) => reverse(i.toString());
 
@@ -206,12 +168,7 @@ void main() {
     test('as', () async {
       final context = Context.create();
 
-      var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% filter reverse as XX %}nuf{% endfilter %}{{ XX }} {{ XX }}',
-              null));
+      var template = Template.parse(context, Source(null, '{% filter reverse as XX %}nuf{% endfilter %}{{ XX }} {{ XX }}', null));
 
       context.filters['reverse'] = (i, a) => reverse(i.toString());
 
@@ -229,25 +186,13 @@ void main() {
         'wat',
       ];
 
-      var template = Template.parse(
-          context, Source(null, '{% if a == "this" %}yes{% endif %}', null));
+      var template = Template.parse(context, Source(null, '{% if a == "this" %}yes{% endif %}', null));
       expect(await template.render(context), equals('yes'));
-      template = Template.parse(context,
-          Source(null, '{% if a != "this" %}no{% else %}yes{% endif %}', null));
+      template = Template.parse(context, Source(null, '{% if a != "this" %}no{% else %}yes{% endif %}', null));
       expect(await template.render(context), equals('yes'));
-      template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% if a != "this" %}no{% elseif true %}yes{% else %}no{% endif %}',
-              null));
+      template = Template.parse(context, Source(null, '{% if a != "this" %}no{% elseif true %}yes{% else %}no{% endif %}', null));
       expect(await template.render(context), equals('yes'));
-      template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% if a != "this" %}no{% elseif 7 > 4 %}yes{% else %}no{% endif %}',
-              null));
+      template = Template.parse(context, Source(null, '{% if a != "this" %}no{% elseif 7 > 4 %}yes{% else %}no{% endif %}', null));
       expect(await template.render(context), equals('yes'));
     });
 
@@ -256,8 +201,7 @@ void main() {
       final root = TestRoot({
         'name_snippet.html': '{{ greeting }}, {{ person|default:"friend" }}!',
         'simple': '{% include "name_snippet.html" %}',
-        'args':
-            '{% include "name_snippet.html" with person="Jane" greeting="Howdy" %}',
+        'args': '{% include "name_snippet.html" with person="Jane" greeting="Howdy" %}',
         'only': '{% include "name_snippet.html" with greeting="Hi" only %}',
       });
 

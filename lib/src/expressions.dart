@@ -55,8 +55,7 @@ class BinaryOperation implements Expression {
   BinaryOperation(this.operation, this.left, this.right);
 
   @override
-  Future<dynamic> evaluate(RenderContext context) async =>
-      operation(await left.evaluate(context), await right.evaluate(context));
+  Future<dynamic> evaluate(RenderContext context) async => operation(await left.evaluate(context), await right.evaluate(context));
 }
 
 class ConstantExpression implements Expression {
@@ -65,10 +64,8 @@ class ConstantExpression implements Expression {
   ConstantExpression(this.value);
 
   factory ConstantExpression.fromToken(Token token) {
-    if (token.type == TokenType.single_string ||
-        token.type == TokenType.double_string) {
-      return ConstantExpression(
-          token.value.substring(1, token.value.length - 1));
+    if (token.type == TokenType.single_string || token.type == TokenType.double_string) {
+      return ConstantExpression(token.value.substring(1, token.value.length - 1));
     } else if (token.type == TokenType.number) {
       return ConstantExpression(num.parse(token.value));
     } else {

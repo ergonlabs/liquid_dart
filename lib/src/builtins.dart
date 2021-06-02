@@ -61,23 +61,18 @@ class BuiltinsModule implements Module {
       return '';
     };
 
-    context.filters['size'] =
-        (input, args) => input is Iterable? ? input!.length : 0;
+    context.filters['size'] = (input, args) => input is Iterable? ? input!.length : 0;
 
-    context.filters['downcase'] = context.filters['lower'] =
-        (input, args) => input!.toString().toLowerCase();
+    context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();
 
-    context.filters['upcase'] = context.filters['upper'] =
-        (input, args) => input!.toString().toUpperCase();
+    context.filters['upcase'] = context.filters['upper'] = (input, args) => input!.toString().toUpperCase();
 
-    context.filters['capitalize'] = context.filters['capfirst'] =
-        (input, args) => input!.toString().replaceFirstMapped(
-              RegExp(r'^\w'),
-              (m) => m.group(0)!.toUpperCase(),
-            );
+    context.filters['capitalize'] = context.filters['capfirst'] = (input, args) => input!.toString().replaceFirstMapped(
+          RegExp(r'^\w'),
+          (m) => m.group(0)!.toUpperCase(),
+        );
 
-    context.filters['join'] = (input, args) => (input as Iterable)
-        .join(args.isNotEmpty ? args[0] : ' ');
+    context.filters['join'] = (input, args) => (input as Iterable).join(args.isNotEmpty ? args[0] : ' ');
 
     context.variables['true'] = true;
     context.variables['false'] = false;

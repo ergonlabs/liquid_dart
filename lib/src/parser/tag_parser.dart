@@ -7,8 +7,7 @@ import '../model.dart';
 class TagParser {
   final Iterator<Token> tokens;
 
-  TagParser.from(List<Token> tokens)
-      : this.fromIterator(tokens.followedBy([Token.eof]).iterator..moveNext());
+  TagParser.from(List<Token> tokens) : this.fromIterator(tokens.followedBy([Token.eof]).iterator..moveNext());
 
   TagParser.fromIterator(this.tokens);
 
@@ -97,12 +96,7 @@ class TagParser {
   }
 
   Expression parseSingleTokenExpression() {
-    expect(types: [
-      TokenType.identifier,
-      TokenType.single_string,
-      TokenType.double_string,
-      TokenType.number
-    ]);
+    expect(types: [TokenType.identifier, TokenType.single_string, TokenType.double_string, TokenType.number]);
     final name = tokens.current;
     tokens.moveNext();
 
@@ -140,8 +134,7 @@ class TagParser {
 
   void expect({List<TokenType>? types, String? value}) {
     if (types != null && !types.contains(tokens.current.type)) {
-      throw ParseException.unexpected(tokens.current,
-          expected: 'one of $types');
+      throw ParseException.unexpected(tokens.current, expected: 'one of $types');
     }
     if (value != null && tokens.current.value != value) {
       throw ParseException.unexpected(tokens.current, expected: "'$value'");
