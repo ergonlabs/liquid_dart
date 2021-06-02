@@ -12,12 +12,10 @@ abstract class CaptureBase extends Block {
   RenderContext scope(RenderContext context);
 
   @override
-  Iterable<String> render(RenderContext context) {
-    final markup = super.render(context).join();
+  Stream<String> render(RenderContext context) async* {
+    final markup = await super.render(context).join();
 
     scope(context).variables[to] = markup;
-
-    return Iterable.empty();
   }
 }
 

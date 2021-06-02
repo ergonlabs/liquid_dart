@@ -5,15 +5,15 @@ class IfChanged extends Block {
   IfChanged(children) : super(children);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) async* {
     var state = context.getTagState(this);
     var output = state['output'];
-    var result = super.render(context).join();
+    var result = await super.render(context).join();
     if (output == result) {
-      return Iterable.empty();
+      return;
     }
     state['output'] = result;
-    return [result];
+    yield result;
   }
 
   static final SimpleBlockFactory factory =

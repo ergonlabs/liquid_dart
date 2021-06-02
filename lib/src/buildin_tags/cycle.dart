@@ -10,7 +10,7 @@ class Cycle extends Block {
   Cycle(this.values) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) {
     var state = context.getTagState(this);
     var index = ((state['index'] ?? -1) + 1) % values.length;
     state['index'] = index;

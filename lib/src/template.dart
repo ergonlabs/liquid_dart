@@ -31,6 +31,11 @@ class Template {
   factory Template.parse(ParseContext context, Source source) =>
       Template(source, Parser(context, source).parse());
 
-  String render(Context context) =>
-      (StringBuffer()..writeAll(document.render(context))).toString();
+  Future<String> render(Context context) async {
+    final buffer = StringBuffer();
+    await for (final chunk in document.render(context)) {
+      buffer.write(chunk);
+    }
+    return buffer.toString();
+  }
 }

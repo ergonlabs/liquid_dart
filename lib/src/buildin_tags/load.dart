@@ -9,8 +9,8 @@ class Load extends Block {
   Load(this.library) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
-    return Iterable.empty();
+  Stream<String> render(RenderContext context) {
+    return Stream.empty();
   }
 
   static final SimpleBlockFactory factory = (tokens, children) {

@@ -15,17 +15,23 @@ class DocumentFuture {
   final ParseContext context;
   final Expression path;
 
+  Document? _document;
+
   DocumentFuture(this.root, this.context, this.path);
 
-  Document resolve(RenderContext context) {
-    var path = this.path.evaluate(context);
+  Future<Document> resolve(RenderContext context) async {
+    return _document ?? (_document = await _resolve(context));
+  }
+
+  Future<Document> _resolve(RenderContext context) async {
+    var path = await this.path.evaluate(context);
     if (path is Template) {
       return path.document;
     }
     if (path is Document) {
       return path;
     }
-    return Template.parse(this.context, root.resolve(path)).document;
+    return Template.parse(this.context, await root.resolve(path)).document;
   }
 }
 
@@ -36,7 +42,7 @@ class Document extends Block {
   Document(this.base, this.loads, List<Tag> children) : super(children);
 
   @override
-  Iterable<String> render(RenderContext initialContext) {
+  Stream<String> render(RenderContext initialContext) async* {
     var context = initialContext.cloneAsRoot();
 
     for (final load in loads) {
@@ -44,18 +50,19 @@ class Document extends Block {
     }
 
     if (base == null) {
-      return super.render(context);
+      yield* super.render(context);
+      return;
     }
 
     var baseContext = initialContext.cloneAsRoot();
     for (final tag in children) {
       if (tag is NamedBlock) {
-        baseContext.blocks[tag.name] = tag.render(context);
+        baseContext.blocks[tag.name] = await tag.render(context).join();
       } else {
         tag.render(context);
       }
     }
-    return base!.resolve(context).render(baseContext);
+    yield* (await base!.resolve(context)).render(baseContext);
   }
 }
 
