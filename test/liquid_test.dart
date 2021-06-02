@@ -250,9 +250,6 @@ class TestRoot implements Root {
   TestRoot(this.files);
 
   @override
-  Uri get path => Uri.parse('file:///unknown');
-
-  @override
   Future<Source> resolve(String relPath) async {
     return Source(null, files[relPath]!, this);
   }

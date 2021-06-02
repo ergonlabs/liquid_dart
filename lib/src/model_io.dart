@@ -8,6 +8,7 @@ class BuildPath implements Root {
 
   BuildPath(this._path);
 
+  @override
   Future<Source> resolve(String relPath) async {
     final file = _path.resolve(relPath);
     final content = await File.fromUri(file).readAsString();

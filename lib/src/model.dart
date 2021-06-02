@@ -1,5 +1,3 @@
-import 'dart:io';
-
 export 'model_web.dart' if (dart.library.io) 'model_io.dart';
 
 abstract class Root {
