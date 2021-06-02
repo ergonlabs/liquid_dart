@@ -36,6 +36,23 @@ void main() {
       expect(await template.render(context), equals('static fun markup'));
     });
 
+    test('whitespace', () async {
+      var render = (String source) async {
+        final context = Context.create();
+
+        var template = Template.parse(context, Source(null, source, null));
+
+        context.variables['variable'] = 'fun';
+
+        return await template.render(context);
+      };
+
+      expect(await render('fun \n {{ variable }} \n fun'), equals('fun \n fun \n fun'));
+      expect(await render('fun \n {{ variable -}} \n fun'), equals('fun \n funfun'));
+      expect(await render('fun \n {{- variable }} \n fun'), equals('funfun \n fun'));
+      expect(await render('fun \n {{- variable -}} \n fun'), equals('funfunfun'));
+    });
+
     test('string var', () async {
       final context = Context.create();
 
@@ -105,7 +122,8 @@ void main() {
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
-      expect(await template.render(context), equals(' a potabo 4 potabo 4.5 potabo'));
+      expect(await template.render(context),
+          equals(' a potabo 4 potabo 4.5 potabo'));
     });
 
     test('for empty', () async {
@@ -168,9 +186,10 @@ void main() {
               '{{ "" | default: "default" }} {{ null | default_if_none: "null" }} {{ list | size }} {{ "upper" | upper }} {{ "lower" | lower }} {{ "capfirst" | capfirst }}',
               null));
       context.variables['null'] = null;
-      context.variables['list'] = [1,2,3];
+      context.variables['list'] = [1, 2, 3];
 
-      expect(await template.render(context), equals('default null 3 UPPER lower Capfirst'));
+      expect(await template.render(context),
+          equals('default null 3 UPPER lower Capfirst'));
     });
 
     test('filter', () async {

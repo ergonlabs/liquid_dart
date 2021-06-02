@@ -78,5 +78,9 @@ class BuiltinsModule implements Module {
 
     context.filters['join'] = (input, args) => (input as Iterable)
         .join(args.isNotEmpty ? args[0] : ' ');
+
+    context.variables['true'] = true;
+    context.variables['false'] = false;
+    context.variables['null'] = null;
   }
 }

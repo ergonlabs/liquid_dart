@@ -97,7 +97,7 @@ class Parser {
 
     var exp = TagParser.fromIterator(tokens).parseFilterExpression();
 
-    expect(value: '}}');
+    expect(types: [TokenType.var_end]);
     return ExpressionTag(exp);
   }
 
