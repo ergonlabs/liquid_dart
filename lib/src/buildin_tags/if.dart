@@ -28,13 +28,13 @@ class If extends Block {
 }
 
 class _IfBlockParser extends BlockParser {
-  List<MapEntry<Expression, List<Tag>>> conditions;
-  Expression lastExpression;
+  final List<MapEntry<Expression, List<Tag>>> conditions = [];
+  Expression? lastExpression;
 
   @override
   void start(context, args) {
     super.start(context, args);
-    conditions = [];
+    conditions.clear();
     lastExpression = TagParser.from(args).parseBooleanExpression();
   }
 
@@ -57,14 +57,14 @@ class _IfBlockParser extends BlockParser {
         throw ParseException.unexpected(start,
             expected: '{% elseif %} must preced {% else %}');
       }
-      conditions.add(MapEntry(lastExpression, List.from(childrenSoFar)));
+      conditions.add(MapEntry(lastExpression!, List.from(childrenSoFar)));
       childrenSoFar.clear();
       lastExpression = TagParser.from(args).parseBooleanExpression();
     } else if (start.value == 'else') {
       if (lastExpression == null) {
         throw ParseException.unexpected(start, expected: '{% endif %}');
       }
-      conditions.add(MapEntry(lastExpression, List.from(childrenSoFar)));
+      conditions.add(MapEntry(lastExpression!, List.from(childrenSoFar)));
       childrenSoFar.clear();
       lastExpression = null;
     } else {

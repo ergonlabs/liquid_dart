@@ -13,7 +13,7 @@ class Assign extends Block {
 
   @override
   Iterable<String> render(RenderContext context) {
-    var innerContext = context.push({this.to: from.evaluate(context)});
+    var innerContext = context.push({to: from.evaluate(context)});
     return super.render(innerContext);
   }
 

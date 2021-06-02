@@ -22,11 +22,13 @@ class Include extends Block {
       innerContext = innerContext.clone();
       innerContext.variables.clear();
     }
-    innerContext = innerContext.push(Map.fromIterable(
-      assignments,
-      key: (a) => a.to,
-      value: (a) => a.from.evaluate(context),
-    ));
+    /// [old]
+    // innerContext = innerContext.push(Map.fromIterable(
+    //   assignments,
+    //   key: (a) => a.to,
+    //   value: (a) => a.from.evaluate(context),
+    // ));
+    innerContext = innerContext.push({ for (var a in assignments) a.to : a.from.evaluate(context) });
 
     return childBuilder.resolve(context).render(innerContext);
   }
@@ -51,7 +53,7 @@ class _IncludeBlockParser extends BlockParser {
     final childBuilder = parser.parseDocumentReference(context);
 
     final assignments = <_Assign>[];
-    if (parser.current != null && parser.current.value == 'with') {
+    if (parser.current.value == 'with') {
       parser.moveNext();
       while (parser.current.type == TokenType.identifier &&
           parser.current.value != 'only') {
@@ -67,8 +69,7 @@ class _IncludeBlockParser extends BlockParser {
       }
     }
 
-    final clearVariable =
-        parser.current != null && parser.current.value == 'only';
+    final clearVariable = parser.current.value == 'only';
 
     return Include._(assignments, clearVariable, childBuilder);
   }

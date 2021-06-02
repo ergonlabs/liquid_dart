@@ -7,13 +7,13 @@ class _TokenCreator {
   final RegExp pattern;
 
   _TokenCreator(this.type, String pattern)
-      : this.pattern = RegExp(pattern, dotAll: true);
+      : pattern = RegExp(pattern, dotAll: true);
 
-  Token scan(Source source, LineScanner ss) {
+  Token? scan(Source source, LineScanner ss) {
     final line = ss.line;
     final column = ss.column;
     if (ss.scan(pattern)) {
-      return Token(type, ss.lastMatch.group(0),
+      return Token(type, ss.lastMatch!.group(0)!,
           source: source, line: line, column: column);
     }
     return null;
@@ -44,7 +44,7 @@ class Lexer {
   final whitespace = RegExp(r'\s*');
 
   Iterable<Token> tokenize(Source source) sync* {
-    LineScanner ss = LineScanner(source.content, sourceUrl: source.file);
+    var ss = LineScanner(source.content, sourceUrl: source.file);
     ss.scan(whitespace);
     while (!ss.isDone) {
       var token = markup.scan(source, ss);

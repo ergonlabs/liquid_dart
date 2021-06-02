@@ -1,5 +1,6 @@
 import 'package:liquid_engine/liquid_engine.dart';
 import 'package:liquid_engine/src/context.dart';
+import 'package:liquid_engine/src/errors.dart';
 import 'package:liquid_engine/src/model.dart';
 import 'package:liquid_engine/src/template.dart';
 import 'package:test/test.dart';
@@ -61,6 +62,15 @@ void main() {
       expect(template.render(context), equals('static fun markup'));
     });
 
+    test('bad assign', () {
+      final context = Context.create();
+
+      expect(
+        () => Template.parse(context, Source(null, '{% assign %}', null)),
+        throwsA(isA<ParseException>()),
+      );
+    });
+
     test('capture', () {
       final context = Context.create();
 
@@ -104,7 +114,9 @@ void main() {
       var template = Template.parse(
           context,
           Source(
-              null, '{% for x in potabo2 %} {{ x }} potabo{% else %}EMPTY!{% endfor %}', null));
+              null,
+              '{% for x in potabo2 %} {{ x }} potabo{% else %}EMPTY!{% endfor %}',
+              null));
 
       context.variables['potabo'] = ['a', 4, 4.5];
 
@@ -150,11 +162,7 @@ void main() {
       final context = Context.create();
 
       var template = Template.parse(
-          context,
-          Source(
-              null,
-              '{% filter reverse%}nuf{% endfilter %}',
-              null));
+          context, Source(null, '{% filter reverse%}nuf{% endfilter %}', null));
 
       context.filters['reverse'] = (i, a) => reverse(i.toString());
 
@@ -215,12 +223,12 @@ void main() {
         'name_snippet.html': '{{ greeting }}, {{ person|default:"friend" }}!',
         'simple': '{% include "name_snippet.html" %}',
         'args':
-        '{% include "name_snippet.html" with person="Jane" greeting="Howdy" %}',
+            '{% include "name_snippet.html" with person="Jane" greeting="Howdy" %}',
         'only': '{% include "name_snippet.html" with greeting="Hi" only %}',
       });
 
-      context.variables['person'] = "John";
-      context.variables['greeting'] = "Hello";
+      context.variables['person'] = 'John';
+      context.variables['greeting'] = 'Hello';
 
       var template = Template.parse(context, root.resolve('simple'));
       expect(template.render(context), equals('Hello, John!'));
@@ -250,9 +258,9 @@ void main() {
   });
 }
 
-reverse(String string) {
+String reverse(String string) {
   final sb = StringBuffer();
-  for (int i = string.length - 1; i >= 0; i--) {
+  for (var i = string.length - 1; i >= 0; i--) {
     sb.writeCharCode(string.codeUnitAt(i));
   }
   return sb.toString();
@@ -264,10 +272,10 @@ class TestRoot implements Root {
   TestRoot(this.files);
 
   @override
-  Uri get path => null;
+  Uri? get path => null;
 
   @override
   Source resolve(String relPath) {
-    return Source(null, files[relPath], this);
+    return Source(null, files[relPath]!, this);
   }
 }

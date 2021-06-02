@@ -14,14 +14,14 @@ class Parser {
   final ParseContext context;
 
   Parser(this.context, this.source)
-      : this.tokens = Lexer().tokenize(source).iterator;
+      : tokens = Lexer().tokenize(source).iterator;
 
   Document parse() {
     return parseBlock(DocumentParser(), [], '<doc>', null) as Document;
   }
 
   Block parseBlock(
-      BlockParser builder, List<Token> args, String start, Token asTarget) {
+      BlockParser builder, List<Token> args, String start, Token? asTarget) {
     var innerChildren = <Tag>[];
     builder.start(context, args);
     if (builder.hasEndTag) {
@@ -61,7 +61,7 @@ class Parser {
             return;
           }
 
-          Token asTarget = null;
+          Token? asTarget;
           if (args.length >= 2 &&
               args[args.length - 1].type == TokenType.identifier &&
               args[args.length - 2].value == 'as') {
@@ -70,7 +70,7 @@ class Parser {
           }
 
           if (context.tags.containsKey(start.value)) {
-            var builder = context.tags[start.value]();
+            var builder = context.tags[start.value]!();
             if (!parent.approveTag(start, children, asTarget)) {
               throw ParseException.unexpected(start);
             }
@@ -101,10 +101,8 @@ class Parser {
     return ExpressionTag(exp);
   }
 
-  void expect({List<TokenType> types, String value, Token token}) {
-    if (token == null) {
-      token = tokens.current;
-    }
+  void expect({List<TokenType>? types, String? value, Token? token}) {
+    token ??= tokens.current;
     if (types != null && !types.contains(token.type)) {
       throw ParseException.unexpected(token, expected: 'one of $types');
     }
