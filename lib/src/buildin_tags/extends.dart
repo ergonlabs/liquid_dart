@@ -26,7 +26,7 @@ class _BlockParser extends BlockParser {
   @override
   Block create(List<Token> tokens, List<Tag> children) {
     final parser = TagParser.from(tokens);
-    return Extends._(parser.parseDocumentReference(context!));
+    return Extends._(parser.parseDocumentReference(context));
   }
 
   @override

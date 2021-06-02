@@ -67,7 +67,7 @@ class _ForBlockParser extends BlockParser {
   Block create(List<Token> tokens, List<Tag> children) {
     var parser = TagParser.from(tokens);
     parser.expect(types: [TokenType.identifier]);
-    final to = parser.current!.value;
+    final to = parser.current.value;
 
     parser.moveNext();
     parser.expect(types: [TokenType.identifier], value: 'in');

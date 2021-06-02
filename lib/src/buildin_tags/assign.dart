@@ -20,7 +20,7 @@ class Assign extends Block {
   static final SimpleBlockFactory factory = (tokens, children) {
     var parser = TagParser.from(tokens);
     parser.expect(types: [TokenType.identifier]);
-    final to = parser.current!.value;
+    final to = parser.current.value;
 
     parser.moveNext();
     parser.expect(types: [TokenType.assign]);

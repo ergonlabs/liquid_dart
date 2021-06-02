@@ -9,7 +9,7 @@ abstract class RenderContext {
 
   RenderContext get root;
 
-  Map<String, Iterable<String>>? blocks;
+  Map<String, Iterable<String>> get blocks;
 
   Map<String, dynamic> get variables;
 
@@ -36,7 +36,7 @@ abstract class Module {
 
 class Context implements RenderContext, ParseContext {
   @override
-  Map<String, Iterable<String>>? blocks = {};
+  Map<String, Iterable<String>> blocks = {};
 
   @override
   Map<String, BlockParserFactory> tags = {};
@@ -57,12 +57,12 @@ class Context implements RenderContext, ParseContext {
       : root.getTagState(tag);
 
   @override
-  Context? parent;
+  final Context? parent;
 
   @override
   RenderContext get root => parent == null ? this : parent!.root;
 
-  Context._();
+  Context._({Context? parent}) : parent = parent;
 
   @override
   void registerModule(String load) {
@@ -78,24 +78,21 @@ class Context implements RenderContext, ParseContext {
   }
 
   @override
-  Context push(Map<String, dynamic> variables) {
-    final context = Context._();
-    context.blocks = Map.from(blocks!);
+  Context push(Map<String, dynamic> variables, {Context? root}) {
+    final context = Context._(parent: root ?? this);
+    context.blocks = Map.from(blocks);
     context.tags = Map.from(tags);
     context.filters = Map.from(filters);
     context.variables = Map.from(this.variables);
     context.variables.addAll(variables);
-    context.parent = this;
     return context;
   }
 
   @override
-  Context clone() => push({});
+  Context clone({Context? root}) => push({}, root: root);
 
   @override
   Context cloneAsRoot() {
-    final context = clone();
-    context.parent = null;
-    return context;
+    return clone(root: null);
   }
 }

@@ -45,6 +45,7 @@ enum TokenType {
   var_start,
   var_end,
   markup,
+  eof,
 }
 
 class Token {
@@ -54,7 +55,7 @@ class Token {
   final int? line;
   final int? column;
 
-  static Token eof = Token(null, '<EOF>');
+  static Token eof = Token(TokenType.eof, '<EOF>');
 
   Token(this.type, this.value, {this.source, this.line, this.column});
 

@@ -71,7 +71,7 @@ class Parser {
 
           if (context.tags.containsKey(start.value)) {
             var builder = context.tags[start.value]!();
-            if (!parent.approveTag(start, children, asTarget!)) {
+            if (!parent.approveTag(start, children, asTarget)) {
               throw ParseException.unexpected(start);
             }
             children.add(parseBlock(builder, args, start.value, asTarget));

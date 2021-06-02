@@ -22,7 +22,7 @@ class Cycle extends Block {
     var values = <ExpressionTag>[];
     do {
       values.add(ExpressionTag(parser.parseFilterExpression()));
-    } while (parser.current?.type == TokenType.comma && parser.moveNext());
+    } while (parser.current.type == TokenType.comma && parser.moveNext());
 
     return Cycle(values);
   };

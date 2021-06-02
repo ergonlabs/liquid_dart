@@ -50,7 +50,7 @@ class Document extends Block {
     var baseContext = initialContext.cloneAsRoot();
     for (final tag in children) {
       if (tag is NamedBlock) {
-        baseContext.blocks![tag.name] = tag.render(context);
+        baseContext.blocks[tag.name] = tag.render(context);
       } else {
         tag.render(context);
       }
@@ -71,7 +71,7 @@ class DocumentParser extends BlockParser {
     if (childrenSoFar.isNotEmpty && childrenSoFar.first is Extends) {
       return asToken != null || start.value == 'block';
     }
-    return super.approveTag(start, childrenSoFar, asToken!);
+    return super.approveTag(start, childrenSoFar, asToken);
   }
 
   @override
@@ -90,7 +90,7 @@ class DocumentParser extends BlockParser {
         start++;
       }
     }
-    return Document(base!, loads, children.sublist(start));
+    return Document(base, loads, children.sublist(start));
   }
 
   @override

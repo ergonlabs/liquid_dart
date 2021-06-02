@@ -10,8 +10,8 @@ class NamedBlock extends Block {
 
   @override
   Iterable<String> render(RenderContext context) {
-    if (context.blocks!.containsKey(name)) {
-      return context.blocks![name]!;
+    if (context.blocks.containsKey(name)) {
+      return context.blocks[name]!;
     }
     return super.render(context);
   }
