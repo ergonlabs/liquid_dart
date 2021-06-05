@@ -44,7 +44,7 @@ main() {
   ];
 
   final template = Template.parse(context, Source.fromString(raw));
-  print(template.render(context));
+  print(await template.render(context));
 }
 ```
 

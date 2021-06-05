@@ -11,6 +11,7 @@ import 'buildin_tags/ifchanged.dart';
 import 'buildin_tags/include.dart';
 import 'buildin_tags/load.dart';
 import 'buildin_tags/named_block.dart';
+import 'buildin_tags/regroup.dart';
 import 'context.dart';
 
 class BuiltinsModule implements Module {
@@ -30,6 +31,7 @@ class BuiltinsModule implements Module {
     context.tags['load'] = BlockParser.simple(Load.factory, hasEndTag: false);
     context.tags['block'] = BlockParser.simple(NamedBlock.factory);
     context.tags['extends'] = Extends.factory;
+    context.tags['regroup'] = Regroup.factory;
 
     context.filters['default'] = (input, args) {
       var output = input != null ? input.toString() : '';
