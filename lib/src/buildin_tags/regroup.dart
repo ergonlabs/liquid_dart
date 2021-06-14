@@ -80,9 +80,6 @@ class _RegroupBlockParser extends BlockParser {
 
   @override
   bool get hasEndTag => false;
-
-  @override
-  bool get defaultAsProcessing => false;
 }
 
 extension JaggedIterable<T> on Iterable<Iterable<T>> {

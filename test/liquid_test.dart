@@ -1,7 +1,7 @@
 import 'package:liquid_engine/liquid_engine.dart';
 import 'package:liquid_engine/src/context.dart';
 import 'package:liquid_engine/src/errors.dart';
-import 'package:liquid_engine/src/exception/parseblock_exception.dart';
+import 'package:liquid_engine/src/exception/parse_block_exception.dart';
 import 'package:liquid_engine/src/model.dart';
 import 'package:liquid_engine/src/template.dart';
 import 'package:test/test.dart';
@@ -76,7 +76,7 @@ void main() {
 
       expect(
         () => Template.parse(context, Source(null, '{% assign %}', null)),
-        throwsA(isA<ParseblockException>()),
+        throwsA(isA<ParseBlockException>()),
       );
     });
 

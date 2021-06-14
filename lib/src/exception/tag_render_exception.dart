@@ -1,11 +1,11 @@
 import '../tag.dart';
 
-class TagrenderException implements Exception {
+class TagRenderException implements Exception {
   final error;
   final stacktrace;
   final Tag tag;
 
-  TagrenderException(this.error, this.stacktrace, this.tag);
+  TagRenderException(this.error, this.stacktrace, this.tag);
 
   @override
   String toString() {

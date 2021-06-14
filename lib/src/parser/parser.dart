@@ -1,4 +1,4 @@
-import '../exception/parseblock_exception.dart';
+import '../exception/parse_block_exception.dart';
 
 import '../block.dart';
 import '../context.dart';
@@ -38,7 +38,7 @@ class Parser {
       }
       return block;
     } catch (error) {
-      throw ParseblockException(error.toString(), start, args);
+      throw ParseBlockException(error.toString(), start, args);
     }
   }
 

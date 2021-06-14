@@ -3,7 +3,7 @@ import 'dart:async';
 import './tag.dart';
 import 'context.dart';
 import 'errors.dart';
-import 'exception/tagrender_exception.dart';
+import 'exception/tag_render_exception.dart';
 import 'model.dart';
 import 'parser/parser.dart';
 
@@ -20,7 +20,7 @@ class Block implements Tag {
       try {
         yield* child.render(context);
       } catch (error, stacktrace) {
-        throw TagrenderException(error, stacktrace, child);
+        throw TagRenderException(error, stacktrace, child);
       }
     }
   }
