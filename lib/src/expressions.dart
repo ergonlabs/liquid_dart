@@ -42,6 +42,7 @@ class BooleanCastExpression implements Expression {
 
     return _bool(await input.evaluate(context));
   }
+
   @override
   String toString() {
     return 'BooleanCastExpression{input: $input}';
@@ -106,6 +107,7 @@ class LookupExpression implements Expression {
   Future<dynamic> evaluate(RenderContext context) async {
     return context.variables[name.value];
   }
+
   @override
   String toString() {
     return 'LookupExpression{name: $name}';
@@ -134,6 +136,7 @@ class MemberExpression implements Expression {
       return null;
     }
   }
+
   @override
   String toString() {
     return 'MemberExpression{base: $base, member: $member}';
