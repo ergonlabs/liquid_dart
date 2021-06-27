@@ -1,3 +1,5 @@
+import '../exception/parse_block_exception.dart';
+
 import '../block.dart';
 import '../context.dart';
 import '../document.dart';
@@ -29,11 +31,15 @@ class Parser {
         builder,
       );
     }
-    var block = builder.create(args, innerChildren);
-    if (asTarget != null) {
-      block = AsBlock(asTarget.value, [block]);
+    try {
+      var block = builder.create(args, innerChildren);
+      if (asTarget != null) {
+        block = AsBlock(asTarget.value, [block]);
+      }
+      return block;
+    } catch (error) {
+      throw ParseBlockException(error.toString(), start, args);
     }
-    return block;
   }
 
   void parseBlockChildren(

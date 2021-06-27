@@ -1,14 +1,14 @@
 name: liquid_engine
 description: A dart port of the liquid / django HTML template engine.
-version: 0.2.1
+version: 0.2.2
 homepage: https://github.com/ergonlabs/liquid_dart
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  string_scanner: ^1.0.5
+  string_scanner: ^1.1.0
 
 dev_dependencies:
-  pedantic: ^1.8.0
-  test: ^1.16.8
+  pedantic: ^1.11.0
+  test: ^1.17.7

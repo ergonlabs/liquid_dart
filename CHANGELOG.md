@@ -1,3 +1,8 @@
+## 0.2.2
+
+- support for regroup tag
+- more verbose error messages
+
 ## 0.2.1
 
 - support for `true` and `false`
