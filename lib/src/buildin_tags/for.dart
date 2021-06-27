@@ -53,6 +53,15 @@ class For extends Block {
   }
 
   static final BlockParserFactory factory = () => _ForBlockParser();
+
+  @override
+  String toString() {
+    var innerC = innerChildren.toString();
+    if (innerC.length > 40) innerC = innerC.substring(0, 30) + '...' + innerC.substring(innerC.length - 7);
+    var elseC = elseChildren.toString();
+    if (elseC.length > 40) elseC = elseC.substring(0, 30) + '...' + elseC.substring(elseC.length - 7);
+    return 'For{from: $from, to: $to, innerChildren: $innerC, elseChildren: $elseC}';
+  }
 }
 
 class _ForBlockParser extends BlockParser {

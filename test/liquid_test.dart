@@ -1,6 +1,7 @@
 import 'package:liquid_engine/liquid_engine.dart';
 import 'package:liquid_engine/src/context.dart';
 import 'package:liquid_engine/src/errors.dart';
+import 'package:liquid_engine/src/exception/parse_block_exception.dart';
 import 'package:liquid_engine/src/model.dart';
 import 'package:liquid_engine/src/template.dart';
 import 'package:test/test.dart';
@@ -75,7 +76,7 @@ void main() {
 
       expect(
         () => Template.parse(context, Source(null, '{% assign %}', null)),
-        throwsA(isA<ParseException>()),
+        throwsA(isA<ParseBlockException>()),
       );
     });
 
@@ -234,11 +235,44 @@ void main() {
       expect(await template.render(context), equals('outer == base2'));
     });
   });
+
+  test('regroup', () async {
+    // https://docs.djangoproject.com/en/3.0/ref/templates/builtins/#regroup
+    final context = Context.create();
+
+    var template = Template.parse(
+        context,
+        Source(
+            null,
+            '{% regroup cities by country to country_list %} ' +
+                '<ul> {% for country in country_list %} ' +
+                '<li>{{ country.grouper }} ' +
+                '<ul>  {% for city in country.list %} ' +
+                '<li> {{ city.name }}: {{ city.population }} </li>' +
+                '  {% endfor %}  </ul> ' +
+                ' </li> ' +
+                '{% endfor %} </ul>',
+            null));
+
+    context.variables['cities'] = [
+      {'name': 'Mumbai', 'population': '19,000,000', 'country': 'India'},
+      {'name': 'Calcutta', 'population': '15,000,000', 'country': 'India'},
+      {'name': 'New York', 'population': '20,000,000', 'country': 'USA'},
+      {'name': 'Chicago', 'population': '7,000,000', 'country': 'USA'},
+      {'name': 'Tokyo', 'population': '33,000,000', 'country': 'Japan'},
+    ];
+
+    String result = await template.render(context);
+    expect(
+        result,
+        equals(
+            ' <ul>  <li>India <ul>   <li> Mumbai: 19,000,000 </li>   <li> Calcutta: 15,000,000 </li>    </ul>  </li>  <li>USA <ul>   <li> New York: 20,000,000 </li>   <li> Chicago: 7,000,000 </li>    </ul>  </li>  <li>Japan <ul>   <li> Tokyo: 33,000,000 </li>    </ul>  </li>  </ul>'));
+  });
 }
 
 String reverse(String string) {
   final sb = StringBuffer();
-  for (var i = string.length - 1; i >= 0; i--) {
+  for (int i = string.length - 1; i >= 0; i--) {
     sb.writeCharCode(string.codeUnitAt(i));
   }
   return sb.toString();

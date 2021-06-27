@@ -3,6 +3,7 @@ import 'dart:async';
 import './tag.dart';
 import 'context.dart';
 import 'errors.dart';
+import 'exception/tag_render_exception.dart';
 import 'model.dart';
 import 'parser/parser.dart';
 
@@ -16,7 +17,11 @@ class Block implements Tag {
 
   Stream<String> renderTags(RenderContext context, Iterable<Tag> children) async* {
     for (final child in children) {
-      yield* child.render(context);
+      try {
+        yield* child.render(context);
+      } catch (error, stacktrace) {
+        throw TagRenderException(error, stacktrace, child);
+      }
     }
   }
 }

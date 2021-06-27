@@ -44,7 +44,7 @@ main() {
   ];
 
   final template = Template.parse(context, Source.fromString(raw));
-  print(template.render(context));
+  print(await template.render(context));
 }
 ```
 
@@ -52,4 +52,4 @@ main() {
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/ergonlabs/liquid_dart/issues
+[tracker]: https://github.com/ergonlabs/liquid_dart/issues 
