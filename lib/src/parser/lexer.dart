@@ -6,15 +6,13 @@ class _TokenCreator {
   final TokenType type;
   final RegExp pattern;
 
-  _TokenCreator(this.type, String pattern)
-      : this.pattern = RegExp(pattern, dotAll: true);
+  _TokenCreator(this.type, String pattern) : pattern = RegExp(pattern, dotAll: true);
 
-  Token scan(Source source, LineScanner ss) {
+  Token? scan(Source source, LineScanner ss) {
     final line = ss.line;
     final column = ss.column;
     if (ss.scan(pattern)) {
-      return Token(type, ss.lastMatch.group(0),
-          source: source, line: line, column: column);
+      return Token(type, ss.lastMatch!.group(0)!, source: source, line: line, column: column);
     }
     return null;
   }
@@ -40,51 +38,50 @@ class Lexer {
     _TokenCreator(TokenType.question, r'\?'),
     _TokenCreator(TokenType.dash, '-'),
   ];
-  final markup = _TokenCreator(TokenType.markup, r'((?!{{)(?!{%).)+');
+  final markup = _TokenCreator(TokenType.markup, r'((?!{{)(?!{%)(?![\s\n\r]*{[{%]-).)+');
   final whitespace = RegExp(r'\s*');
 
   Iterable<Token> tokenize(Source source) sync* {
     var ss = LineScanner(source.content, sourceUrl: source.file);
-    ss.scan(whitespace);
     while (!ss.isDone) {
       var token = markup.scan(source, ss);
       if (token != null) {
         yield token;
       }
 
-      if (ss.matches('{%')) {
+      if (ss.matches(tagStart)) {
         yield* tokenizeTag(source, ss);
-      } else if (ss.matches('{{')) {
+      } else if (ss.matches(varStart)) {
         yield* tokenizeVar(source, ss);
       }
     }
   }
 
-  Iterable<Token> tokenizeTag(Source source, LineScanner ss) =>
-      tokenizeNonMarkup(
+  RegExp tagStart = RegExp(r'({%-?)|([\s\n\r]*{%-)');
+  RegExp tagEnd = RegExp(r'(%})|(-%}[\s\n\r]*)');
+  Iterable<Token> tokenizeTag(Source source, LineScanner ss) => tokenizeNonMarkup(
         source,
         ss,
         TokenType.tag_start,
-        '{%',
+        tagStart,
         TokenType.tag_end,
-        '%}',
+        tagEnd,
       );
 
-  Iterable<Token> tokenizeVar(Source source, LineScanner ss) =>
-      tokenizeNonMarkup(
+  RegExp varStart = RegExp(r'({{-?)|([\s\n\r]*{{-)');
+  RegExp varEnd = RegExp(r'(}})|(-}}[\s\n\r]*)');
+  Iterable<Token> tokenizeVar(Source source, LineScanner ss) => tokenizeNonMarkup(
         source,
         ss,
         TokenType.var_start,
-        '{{',
+        varStart,
         TokenType.var_end,
-        '}}',
+        varEnd,
       );
 
-  Iterable<Token> tokenizeNonMarkup(Source source, LineScanner ss,
-      TokenType startType, String start, TokenType endType, String end) sync* {
+  Iterable<Token> tokenizeNonMarkup(Source source, LineScanner ss, TokenType startType, Pattern start, TokenType endType, Pattern end) sync* {
     ss.expect(start);
-    yield Token(startType, start,
-        source: source, line: ss.line, column: ss.column - 2);
+    yield Token(startType, ss.lastMatch!.group(0)!, source: source, line: ss.line, column: ss.column - 2);
 
     mainLoop:
     while (ss.scan(whitespace) && !ss.matches(end)) {
@@ -103,7 +100,6 @@ class Lexer {
     }
 
     ss.expect(end);
-    yield Token(endType, end,
-        source: source, line: ss.line, column: ss.column - 2);
+    yield Token(endType, ss.lastMatch!.group(0)!, source: source, line: ss.line, column: ss.column - 2);
   }
 }

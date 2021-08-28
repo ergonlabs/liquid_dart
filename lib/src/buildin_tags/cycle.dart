@@ -10,7 +10,7 @@ class Cycle extends Block {
   Cycle(this.values) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) {
     var state = context.getTagState(this);
     var index = ((state['index'] ?? -1) + 1) % values.length;
     state['index'] = index;
@@ -22,7 +22,7 @@ class Cycle extends Block {
     var values = <ExpressionTag>[];
     do {
       values.add(ExpressionTag(parser.parseFilterExpression()));
-    } while (parser.current?.type == TokenType.comma && parser.moveNext());
+    } while (parser.current.type == TokenType.comma && parser.moveNext());
 
     return Cycle(values);
   };

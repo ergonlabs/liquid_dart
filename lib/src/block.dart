@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import './tag.dart';
 import 'context.dart';
 import 'errors.dart';
+import 'exception/tag_render_exception.dart';
 import 'model.dart';
 import 'parser/parser.dart';
 
@@ -10,13 +13,15 @@ class Block implements Tag {
   Block(this.children);
 
   @override
-  Iterable<String> render(RenderContext context) =>
-      renderTags(context, children);
+  Stream<String> render(RenderContext context) => renderTags(context, children);
 
-  Iterable<String> renderTags(
-      RenderContext context, Iterable<Tag> children) sync* {
+  Stream<String> renderTags(RenderContext context, Iterable<Tag> children) async* {
     for (final child in children) {
-      yield* child.render(context);
+      try {
+        yield* child.render(context);
+      } catch (error, stacktrace) {
+        throw TagRenderException(error, stacktrace, child);
+      }
     }
   }
 }
@@ -27,27 +32,24 @@ class AsBlock extends Block {
   AsBlock(this.to, List<Tag> children) : super(children);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) {
     context.variables[to] = super.render(context).join();
-    return Iterable.empty();
+    return Stream.empty();
   }
 }
 
 abstract class BlockParser {
-  ParseContext context;
+  late ParseContext context;
 
   Block create(List<Token> tokens, List<Tag> children);
 
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar);
 
-  bool approveTag(Token start, List<Tag> childrenSoFar, Token asToken) =>
-      start.value != 'extend' && start.value != 'load';
+  bool approveTag(Token start, List<Tag> childrenSoFar, Token? asToken) => start.value != 'extend' && start.value != 'load';
 
   BlockParser();
 
-  static BlockParserFactory simple(SimpleBlockFactory factory,
-      {hasEndTag = true}) {
+  static BlockParserFactory simple(SimpleBlockFactory factory, {hasEndTag = true}) {
     return () => _SimpleBlockParser(factory, hasEndTag);
   }
 
@@ -58,9 +60,9 @@ abstract class BlockParser {
   bool get hasEndTag => true;
 }
 
-typedef BlockParser BlockParserFactory();
+typedef BlockParserFactory = BlockParser Function();
 
-typedef Block SimpleBlockFactory(List<Token> tokens, List<Tag> children);
+typedef SimpleBlockFactory = Block Function(List<Token> tokens, List<Tag> children);
 
 class _SimpleBlockParser extends BlockParser {
   final SimpleBlockFactory factory;
@@ -70,12 +72,10 @@ class _SimpleBlockParser extends BlockParser {
   _SimpleBlockParser(this.factory, this.hasEndTag);
 
   @override
-  Block create(List<Token> tokens, List<Tag> children) =>
-      factory(tokens, children);
+  Block create(List<Token> tokens, List<Tag> children) => factory(tokens, children);
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {
     throw ParseException.unexpected(start);
   }
 }

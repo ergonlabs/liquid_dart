@@ -12,8 +12,8 @@ class Assign extends Block {
   Assign(this.to, this.from, List<Tag> children) : super(children);
 
   @override
-  Iterable<String> render(RenderContext context) {
-    var innerContext = context.push({this.to: from.evaluate(context)});
+  Stream<String> render(RenderContext context) {
+    var innerContext = context.push({to: from.evaluate(context)});
     return super.render(innerContext);
   }
 

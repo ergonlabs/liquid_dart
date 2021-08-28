@@ -11,6 +11,7 @@ import 'buildin_tags/ifchanged.dart';
 import 'buildin_tags/include.dart';
 import 'buildin_tags/load.dart';
 import 'buildin_tags/named_block.dart';
+import 'buildin_tags/regroup.dart';
 import 'context.dart';
 
 class BuiltinsModule implements Module {
@@ -30,6 +31,7 @@ class BuiltinsModule implements Module {
     context.tags['load'] = BlockParser.simple(Load.factory, hasEndTag: false);
     context.tags['block'] = BlockParser.simple(NamedBlock.factory);
     context.tags['extends'] = Extends.factory;
+    context.tags['regroup'] = Regroup.factory;
 
     context.filters['default'] = (input, args) {
       var output = input != null ? input.toString() : '';
@@ -61,22 +63,21 @@ class BuiltinsModule implements Module {
       return '';
     };
 
-    context.filters['size'] =
-        (input, args) => input is Iterable ? input.length : 0;
+    context.filters['size'] = (input, args) => input is Iterable? ? input!.length : 0;
 
-    context.filters['downcase'] = context.filters['lower'] =
-        (input, args) => input?.toString()?.toLowerCase();
+    context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();
 
-    context.filters['upcase'] = context.filters['upper'] =
-        (input, args) => input?.toString()?.toLowerCase();
+    context.filters['upcase'] = context.filters['upper'] = (input, args) => input!.toString().toUpperCase();
 
-    context.filters['capitalize'] = context.filters['capfirst'] =
-        (input, args) => input?.toString()?.replaceFirstMapped(
-              RegExp(r'^\w'),
-              (m) => m.group(0).toUpperCase(),
-            );
+    context.filters['capitalize'] = context.filters['capfirst'] = (input, args) => input!.toString().replaceFirstMapped(
+          RegExp(r'^\w'),
+          (m) => m.group(0)!.toUpperCase(),
+        );
 
-    context.filters['join'] = (input, args) => (input as Iterable)
-        .join(args != null && args.isNotEmpty ? args[0] : ' ');
+    context.filters['join'] = (input, args) => (input as Iterable).join(args.isNotEmpty ? args[0] : ' ');
+
+    context.variables['true'] = true;
+    context.variables['false'] = false;
+    context.variables['null'] = null;
   }
 }

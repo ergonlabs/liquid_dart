@@ -5,7 +5,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('parser tests', () {
-
     test('markup only', () {
       var template = Lexer().tokenize(Source(null, 'static markup', null)).toList();
 
@@ -22,6 +21,34 @@ void main() {
 
     test('tag only', () {
       var template = Lexer().tokenize(Source(null, '{% if %}', null)).toList();
+
+      print(template);
+      expect(template, hasLength(3));
+    });
+
+    test('whitespace control - none', () {
+      var template = Lexer().tokenize(Source(null, '   {% if %}   ', null)).toList();
+
+      print(template);
+      expect(template, hasLength(5));
+    });
+
+    test('whitespace control - start', () {
+      var template = Lexer().tokenize(Source(null, '   {%- if %}   ', null)).toList();
+
+      print(template);
+      expect(template, hasLength(4));
+    });
+
+    test('whitespace control - end', () {
+      var template = Lexer().tokenize(Source(null, '   {% if -%}   ', null)).toList();
+
+      print(template);
+      expect(template, hasLength(4));
+    });
+
+    test('whitespace control - both', () {
+      var template = Lexer().tokenize(Source(null, '   {%- if -%}   ', null)).toList();
 
       print(template);
       expect(template, hasLength(3));
@@ -52,7 +79,7 @@ void main() {
       var template = Lexer().tokenize(Source(null, ' {% if x | ifblank: "bob" %} {{ if | append: "secrets" }} ', null)).toList();
 
       print(template);
-      expect(template, hasLength(17));
+      expect(template, hasLength(18));
     });
   });
 }

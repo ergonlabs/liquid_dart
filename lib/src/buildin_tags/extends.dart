@@ -12,8 +12,8 @@ class Extends extends Block {
   Extends._(this.base) : super([]);
 
   @override
-  Iterable<String> render(RenderContext context) {
-    return Iterable.empty();
+  Stream<String> render(RenderContext context) {
+    return Stream.empty();
   }
 
   static BlockParserFactory factory = () => _BlockParser();
@@ -30,6 +30,5 @@ class _BlockParser extends BlockParser {
   }
 
   @override
-  void unexpectedTag(
-      Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
+  void unexpectedTag(Parser parser, Token start, List<Token> args, List<Tag> childrenSoFar) {}
 }

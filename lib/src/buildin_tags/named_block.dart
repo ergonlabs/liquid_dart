@@ -9,9 +9,9 @@ class NamedBlock extends Block {
   NamedBlock(this.name, List<Tag> children) : super(children);
 
   @override
-  Iterable<String> render(RenderContext context) {
+  Stream<String> render(RenderContext context) {
     if (context.blocks.containsKey(name)) {
-      return context.blocks[name];
+      return Stream.value(context.blocks[name]!);
     }
     return super.render(context);
   }
