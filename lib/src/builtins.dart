@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'block.dart';
 import 'buildin_tags/assign.dart';
 import 'buildin_tags/capture.dart';
@@ -127,6 +129,28 @@ class BuiltinsModule implements Module {
         var v = num.tryParse('$arg');
         assert(v != null && v is num);
         output %= v;
+      }
+      return output;
+    };
+
+    context.filters['date'] = (input, args) {
+      var output = input;
+      if (input is String) {
+        output = DateTime.tryParse(input);
+      }
+      output ??= DateTime.now();
+
+      for (var arg in args) {
+        var formatter = DateFormat('yyyy-MM-dd');
+        if (arg != null) {
+          if (arg is String) {
+            formatter = DateFormat(arg);
+          } else if (arg is DateFormat) {
+            formatter = arg;
+          }
+        }
+
+        output = formatter.format((output as DateTime));
       }
       return output;
     };

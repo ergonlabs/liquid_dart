@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:liquid_engine/liquid_engine.dart';
 import 'package:liquid_engine/src/context.dart';
 import 'package:liquid_engine/src/errors.dart';
@@ -201,6 +202,15 @@ void main() {
 
       print((await template.render(context)));
       expect(await template.render(context), equals('1'));
+    });
+
+    test('date', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ now | date: format }}', null));
+      context.variables['now'] = DateTime.tryParse('2021-08-10');
+      context.variables['format'] = DateFormat.MMM();
+      print((await template.render(context)));
+      // expect(await template.render(context), equals('2021-08'));
     });
 
     test('filter', () async {
