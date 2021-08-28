@@ -63,6 +63,74 @@ class BuiltinsModule implements Module {
       return '';
     };
 
+    context.filters['add'] = (input, args) {
+      assert(input != null);
+      var output = input;
+      if (output is List) {
+        for (var arg in args) {
+          output = [...output, ...arg];
+        }
+      } else if (output is num) {
+        for (var arg in args) {
+          var v = num.tryParse('$arg');
+          assert(v != null && v is num);
+          output += v;
+        }
+      }
+      return output;
+    };
+
+    context.filters['minus'] = (input, args) {
+      assert(input != null);
+      var output = input;
+      if (output is List) {
+        for (var arg in args) {
+          var list = arg as List;
+          output = output.where((e) => !list.contains(e)).toList();
+        }
+      } else if (output is num) {
+        for (var arg in args) {
+          var v = num.tryParse('$arg');
+          assert(v != null && v is num);
+          output -= v;
+        }
+      }
+      return output;
+    };
+
+    context.filters['multi'] = (input, args) {
+      assert(input != null && input is num);
+      var output = input;
+      for (final arg in args) {
+        var v = num.tryParse('$arg');
+        assert(v != null && v is num);
+        output *= v;
+      }
+      return output;
+    };
+
+    context.filters['divide'] = (input, args) {
+      assert(input != null && input is num);
+      var output = input;
+      for (final arg in args) {
+        var v = num.tryParse('$arg');
+        assert(v != null && v is num);
+        output /= v;
+      }
+      return output;
+    };
+
+    context.filters['modulus'] = (input, args) {
+      assert(input != null && input is num);
+      var output = input;
+      for (final arg in args) {
+        var v = num.tryParse('$arg');
+        assert(v != null && v is num);
+        output %= v;
+      }
+      return output;
+    };
+
     context.filters['size'] = (input, args) => input is Iterable? ? input!.length : 0;
 
     context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();

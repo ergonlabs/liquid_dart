@@ -156,6 +156,53 @@ void main() {
       expect(await template.render(context), equals('default null 3 UPPER lower Capfirst'));
     });
 
+    test('math add', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ list1 | add: list2 }} {{ num1 | add: num2 }}', null));
+      context.variables['list1'] = [1, 2, 3];
+      context.variables['list2'] = [4, 5, 6];
+      context.variables['num1'] = 1;
+      context.variables['num2'] = '2';
+      // print((await template.render(context)));
+      expect(await template.render(context), equals('[1, 2, 3, 4, 5, 6] 3'));
+    });
+
+    test('math minus', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ list1 | minus: list2 }} {{ num1 | minus: num2 }}', null));
+      context.variables['list1'] = [1, 2, 3];
+      context.variables['list2'] = [1];
+      context.variables['num1'] = 1;
+      context.variables['num2'] = '2';
+
+      // print((await template.render(context)));
+      expect(await template.render(context), equals('[2, 3] -1'));
+    });
+
+    test('math multi', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ 1 | multi: "2" | multi: "4" }}', null));
+
+      // print((await template.render(context)));
+      expect(await template.render(context), equals('8'));
+    });
+
+    test('math devide', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ 1 | divide: "2" | divide: "4" }}', null));
+
+      // print((await template.render(context)));
+      expect(await template.render(context), equals('0.125'));
+    });
+
+    test('math modulus', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ 3 | modulus: "2" }}', null));
+
+      print((await template.render(context)));
+      expect(await template.render(context), equals('1'));
+    });
+
     test('filter', () async {
       final context = Context.create();
 
