@@ -197,6 +197,41 @@ void main() {
       expect(await template.render(context), equals('yes'));
     });
 
+    test('firstof', () async {
+      final context = Context.create();
+
+      var template = Template.parse(context, Source(null, '{% firstof true 1 %}', null));
+      expect(await template.render(context), equals('true'));
+      template = Template.parse(context, Source(null, '{% firstof 1 true %}', null));
+      expect(await template.render(context), equals('1'));
+      template = Template.parse(context, Source(null, '{% firstof false 0 true 1 %}', null));
+      expect(await template.render(context), equals('true'));
+      template = Template.parse(context, Source(null, '{% firstof undefined false 1 true 0 %}', null));
+      expect(await template.render(context), equals('1'));
+
+      template = Template.parse(context, Source(null, '{% firstof false %}', null));
+      expect(await template.render(context), equals(''));
+      template = Template.parse(context, Source(null, '{% firstof 0 %}', null));
+      expect(await template.render(context), equals(''));
+      template = Template.parse(context, Source(null, '{% firstof 0 undefined false %}', null));
+      expect(await template.render(context), equals(''));
+
+      context.variables['a'] = 'this';
+      context.variables['b'] = {'a': 'is'};
+      context.variables['d'] = [
+        'wat',
+        'so',
+        'wat',
+      ];
+
+      template = Template.parse(context, Source(null, '{% firstof a b c d %}', null));
+      expect(await template.render(context), equals('this'));
+      template = Template.parse(context, Source(null, '{% firstof b c d a %}', null));
+      expect(await template.render(context), equals('{a: is}'));
+      template = Template.parse(context, Source(null, '{% firstof c d a b %}', null));
+      expect(await template.render(context), equals('[wat, so, wat]'));
+    });
+
     test('include', () async {
       final context = Context.create();
       final root = TestRoot({

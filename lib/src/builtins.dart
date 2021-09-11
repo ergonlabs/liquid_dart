@@ -5,6 +5,7 @@ import 'buildin_tags/comment.dart';
 import 'buildin_tags/cycle.dart';
 import 'buildin_tags/extends.dart';
 import 'buildin_tags/filter.dart';
+import 'buildin_tags/firstof.dart';
 import 'buildin_tags/for.dart';
 import 'buildin_tags/if.dart';
 import 'buildin_tags/ifchanged.dart';
@@ -32,6 +33,7 @@ class BuiltinsModule implements Module {
     context.tags['block'] = BlockParser.simple(NamedBlock.factory);
     context.tags['extends'] = Extends.factory;
     context.tags['regroup'] = Regroup.factory;
+    context.tags['firstof'] = BlockParser.simple(FirstOf.factory, hasEndTag: false);
 
     context.filters['default'] = (input, args) {
       var output = input != null ? input.toString() : '';
