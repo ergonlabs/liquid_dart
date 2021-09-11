@@ -1,6 +1,6 @@
 import 'package:liquid_engine/liquid_engine.dart';
 
-dynamic main() {
+Future<void> main() async {
   final raw = '''
 <html>
   <title>{{ title | default: 'Liquid Example'}}</title>
@@ -34,5 +34,5 @@ dynamic main() {
   ];
 
   final template = Template.parse(context, Source.fromString(raw));
-  print(template.render(context));
+  print(await template.render(context));
 }
