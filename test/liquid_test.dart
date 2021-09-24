@@ -166,7 +166,7 @@ void main() {
       expect(await template.render(context), equals('true'));
     });
 
-     test('test empty', () async {
+    test('test empty', () async {
       final context = Context.create();
       var template = Template.parse(context, Source(null, '''{% if student | isNotEmpty %}true{% else %}false{% endif %}''', null));
       context.variables['student'] = 'Student';
