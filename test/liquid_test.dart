@@ -157,6 +157,24 @@ void main() {
       expect(await template.render(context), equals('default null 3 UPPER lower Capfirst'));
     });
 
+    test('test size', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '''{% if student | size > 0 %}true{% else %}false{% endif %}''', null));
+      context.variables['student'] = 'Student';
+      context.variables['values'] = [1, 2, 3, 4, 5, 6, 7];
+      // print((await template.render(context)));
+      expect(await template.render(context), equals('true'));
+    });
+
+     test('test empty', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '''{% if student | isNotEmpty %}true{% else %}false{% endif %}''', null));
+      context.variables['student'] = 'Student';
+      context.variables['values'] = [1, 2, 3, 4, 5, 6, 7];
+      // print((await template.render(context)));
+      expect(await template.render(context), equals('true'));
+    });
+
     test('math add', () async {
       final context = Context.create();
       var template = Template.parse(context, Source(null, '{{ list1 | add: list2 }} {{ num1 | add: num2 }}', null));

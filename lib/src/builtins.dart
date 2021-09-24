@@ -155,7 +155,44 @@ class BuiltinsModule implements Module {
       return output;
     };
 
-    context.filters['size'] = (input, args) => input is Iterable? ? input!.length : 0;
+    context.filters['size'] = (input, args) {
+      if (input is Iterable) {
+        return input.length;
+      } else if (input is String) {
+        return input.length;
+      } else if (input is Object) {
+        return 0;
+      }
+      return 0;
+    };
+
+    context.filters['isEmpty'] = (input, args) {
+      if (input == null) {
+        return true;
+      } else if (input is Iterable) {
+        return input.isEmpty;
+      } else if (input is String) {
+        if (input == 'null') {
+          return true;
+        }
+        return input.isEmpty;
+      }
+      return true;
+    };
+
+    context.filters['isNotEmpty'] = (input, args) {
+      if (input == null) {
+        return false;
+      } else if (input is Iterable) {
+        return input.isNotEmpty;
+      } else if (input is String) {
+        if (input == 'null') {
+          return false;
+        }
+        return input.isNotEmpty;
+      }
+      return false;
+    };
 
     context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();
 
