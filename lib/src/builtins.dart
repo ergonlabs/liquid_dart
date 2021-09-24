@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'block.dart';
 import 'buildin_tags/assign.dart';
 import 'buildin_tags/capture.dart';
@@ -63,7 +65,134 @@ class BuiltinsModule implements Module {
       return '';
     };
 
-    context.filters['size'] = (input, args) => input is Iterable? ? input!.length : 0;
+    context.filters['add'] = (input, args) {
+      assert(input != null);
+      var output = input;
+      if (output is List) {
+        for (var arg in args) {
+          output = [...output, ...arg];
+        }
+      } else if (output is num) {
+        for (var arg in args) {
+          var v = num.tryParse('$arg');
+          assert(v != null && v is num);
+          output += v;
+        }
+      }
+      return output;
+    };
+
+    context.filters['minus'] = (input, args) {
+      assert(input != null);
+      var output = input;
+      if (output is List) {
+        for (var arg in args) {
+          var list = arg as List;
+          output = output.where((e) => !list.contains(e)).toList();
+        }
+      } else if (output is num) {
+        for (var arg in args) {
+          var v = num.tryParse('$arg');
+          assert(v != null && v is num);
+          output -= v;
+        }
+      }
+      return output;
+    };
+
+    context.filters['multi'] = (input, args) {
+      assert(input != null && input is num);
+      var output = input;
+      for (final arg in args) {
+        var v = num.tryParse('$arg');
+        assert(v != null && v is num);
+        output *= v;
+      }
+      return output;
+    };
+
+    context.filters['divide'] = (input, args) {
+      assert(input != null && input is num);
+      var output = input;
+      for (final arg in args) {
+        var v = num.tryParse('$arg');
+        assert(v != null && v is num);
+        output /= v;
+      }
+      return output;
+    };
+
+    context.filters['modulus'] = (input, args) {
+      assert(input != null && input is num);
+      var output = input;
+      for (final arg in args) {
+        var v = num.tryParse('$arg');
+        assert(v != null && v is num);
+        output %= v;
+      }
+      return output;
+    };
+
+    context.filters['date'] = (input, args) {
+      var output = input;
+      if (input is String) {
+        output = DateTime.tryParse(input);
+      }
+      output ??= DateTime.now();
+
+      for (var arg in args) {
+        var formatter = DateFormat('yyyy-MM-dd');
+        if (arg != null) {
+          if (arg is String) {
+            formatter = DateFormat(arg);
+          } else if (arg is DateFormat) {
+            formatter = arg;
+          }
+        }
+
+        output = formatter.format((output as DateTime));
+      }
+      return output;
+    };
+
+    context.filters['size'] = (input, args) {
+      if (input is Iterable) {
+        return input.length;
+      } else if (input is String) {
+        return input.length;
+      } else if (input is Object) {
+        return 0;
+      }
+      return 0;
+    };
+
+    context.filters['isEmpty'] = (input, args) {
+      if (input == null) {
+        return true;
+      } else if (input is Iterable) {
+        return input.isEmpty;
+      } else if (input is String) {
+        if (input == 'null') {
+          return true;
+        }
+        return input.isEmpty;
+      }
+      return true;
+    };
+
+    context.filters['isNotEmpty'] = (input, args) {
+      if (input == null) {
+        return false;
+      } else if (input is Iterable) {
+        return input.isNotEmpty;
+      } else if (input is String) {
+        if (input == 'null') {
+          return false;
+        }
+        return input.isNotEmpty;
+      }
+      return false;
+    };
 
     context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();
 
