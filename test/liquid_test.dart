@@ -208,10 +208,10 @@ void main() {
 
     test('math devide', () async {
       final context = Context.create();
-      var template = Template.parse(context, Source(null, '{{ 1 | divide: "2" | divide: "4" }}', null));
+      var template = Template.parse(context, Source(null, '{{ 1 | divide: "2" | divide: "4" }} and {{ 1.00000 | divide: "1"}}', null));
 
       // print((await template.render(context)));
-      expect(await template.render(context), equals('0.125'));
+      expect(await template.render(context), equals('0.125 and 1.0'));
     });
 
     test('math modulus', () async {
@@ -220,6 +220,30 @@ void main() {
 
       print((await template.render(context)));
       expect(await template.render(context), equals('1'));
+    });
+
+    test('parseInt', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ 3.00 | parseInt }}', null));
+
+      print((await template.render(context)));
+      expect(await template.render(context), equals('3'));
+    });
+
+    test('parseDouble', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ 3 | parseDouble }}', null));
+
+      print((await template.render(context)));
+      expect(await template.render(context), equals('3.0'));
+    });
+
+    test('stringAsFixed', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ 3 | stringAsFixed : "3" }} {{ 3.000 | stringAsFixed : "0" }}', null));
+
+      print((await template.render(context)));
+      expect(await template.render(context), equals('3.000 3'));
     });
 
     test('date', () async {

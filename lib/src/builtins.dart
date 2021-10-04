@@ -194,6 +194,51 @@ class BuiltinsModule implements Module {
       return false;
     };
 
+    context.filters['parseInt'] = (input, args) {
+      if (input is num) {
+        return input.toInt();
+      }
+      return 0;
+    };
+
+    context.filters['parseDouble'] = (input, args) {
+      if (input is num) {
+        return input.toDouble();
+      }
+      return 0.0;
+    };
+
+    context.filters['stringAsFixed'] = (input, args) {
+      var digit = 0;
+      if (args.isNotEmpty == true) {
+        var d = args.first;
+        if (d is String) {
+          digit = int.tryParse(d) ?? 0;
+        } else if (d is num) {
+          digit = d.toInt();
+        }
+      }
+
+      if (input is num) {
+        return input.toStringAsFixed(digit);
+      }
+      return 0.0;
+    };
+
+    context.filters['parseNum'] = (input, args) {
+      if (input is num) {
+        return input;
+      }
+      return num.tryParse('$input') ?? 0;
+    };
+
+    context.filters['abs'] = (input, args) {
+      if (input is num) {
+        return input.abs();
+      }
+      return 0;
+    };
+
     context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();
 
     context.filters['upcase'] = context.filters['upper'] = (input, args) => input!.toString().toUpperCase();
