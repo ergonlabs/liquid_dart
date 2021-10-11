@@ -8,15 +8,21 @@ void main() async {
 
   runApp(
     EasyLocalization(
-        supportedLocales: [Locale('en', 'US'), Locale('km', 'KH')],
-        path: 'assets/translations', // <-- change the path of the translation files
-        fallbackLocale: Locale('en', 'US'),
-        child: MyApp()),
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('km', 'KH'),
+      ],
+      path: 'assets/translations',
+      startLocale: const Locale('km', 'KH'),
+      fallbackLocale: const Locale('en', 'US'),
+      saveLocale: true,
+      child: const MyApp(),
+    ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -28,15 +34,18 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       initialRoute: "/",
       title: "test liquid",
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       routes: {
-        "/": (_) => HomePage(),
+        "/": (_) => const HomePage(),
       },
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -47,21 +56,34 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("liquid flutter"),
+        title: Text("welcome".tr()),
       ),
-      body: Container(
-        child: Center(
-          child: ElevatedButton(
-            onPressed: _onGenerate,
-            child: Text("generate"),
-          ),
+      body: Center(
+        child: Column(
+          children: [
+            // args
+            Text('msg').tr(args: ['Easy localization', 'Dart']),
+
+// namedArgs
+            Text('msg_named').tr(namedArgs: {'lang': 'Dart'}),
+
+// args and namedArgs
+            Text('msg_mixed').tr(args: ['Easy localization'], namedArgs: {'lang': 'Dart'}),
+
+// gender
+            Text('gender').tr(gender: "female"),
+          ],
         ),
+      ),
+      floatingActionButton: ElevatedButton(
+        onPressed: _onGenerate,
+        child: const Text("generate"),
       ),
     );
   }
 
-  _onGenerate() {
-    final raw = '''
+  _onGenerate() async {
+    const raw = """
 <html>
   <title>{{ title | default: 'Liquid Example'}}</title>
   <body>
@@ -73,10 +95,12 @@ class _HomePageState extends State<HomePage> {
         <td>{{ user.roles | join: ', ' | default: 'none' }}</td>
       </tr>
     {% endfor %}
+    {{ "welcome" | tr : "d" }}
+    {{ "msg" | tr : "Dart", "Great" }}
     </table>
   </body>
 </html>
-  ''';
+  """;
 
     final context = Context.create();
 
@@ -94,6 +118,6 @@ class _HomePageState extends State<HomePage> {
     ];
 
     final template = Template.parse(context, Source.fromString(raw));
-    print(template.render(context));
+    print(await template.render(context));
   }
 }

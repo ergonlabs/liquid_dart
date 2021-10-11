@@ -9,6 +9,7 @@ linter:
   rules:
     unnecessary_this: false
     prefer_final_fields: false
+    prefer_single_quotes: false
     
 analyzer:
 #   exclude:

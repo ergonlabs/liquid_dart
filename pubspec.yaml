@@ -10,6 +10,7 @@ dependencies:
   string_scanner: ^1.1.0
   intl: ^0.17.0
   easy_localization: ^3.0.0
+  easy_logger: ^0.0.2
 
 
 dev_dependencies:

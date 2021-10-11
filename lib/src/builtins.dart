@@ -1,5 +1,8 @@
-import 'package:intl/intl.dart';
+import 'dart:convert';
 
+import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:liquid_engine/src/model.dart';
 import 'block.dart';
 import 'buildin_tags/assign.dart';
 import 'buildin_tags/capture.dart';
@@ -237,6 +240,47 @@ class BuiltinsModule implements Module {
         return input.abs();
       }
       return 0;
+    };
+
+    context.filters['tr'] = (input, args) {
+      LiquidEngine.logger.info("start tr");
+      var _args = <String>[];
+      // var _namedArgs = <String, String>{};
+      // var _gender = "";
+      LiquidEngine.logger.info("args ${args.runtimeType}");
+      _args = List<String>.from(args);
+      // if (args.isNotEmpty == true) {
+      //   if (args is List<String> || args is Iterable<String>) {
+      //     LiquidEngine.logger.info("args is list of string");
+      //     _args = List<String>.from(args);
+      //   } else {
+      //     LiquidEngine.logger.info("args is list of dynamic");
+      //     var m = List<Map>.from(args.map((e) => jsonDecode(e)).toList());
+      //     if (m.isNotEmpty) {
+      //       _args = List<String>.from(Map.from(m[0]).values);
+      //     }
+      //     if (m.length > 1) {
+      //       _namedArgs = Map<String, String>.from(m[1]);
+      //     }
+      //     if (m.length > 2) {
+      //       _gender = m[2].values.first;
+      //     }
+      //   }
+      // }
+
+      if (input is String) {
+        return input.tr(
+          args: _args,
+          // namedArgs: _namedArgs,
+          // gender: _gender,
+        );
+      } else {
+        return "$input".tr(
+          args: _args,
+          // namedArgs: _namedArgs,
+          // gender: _gender,
+        );
+      }
     };
 
     context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();
