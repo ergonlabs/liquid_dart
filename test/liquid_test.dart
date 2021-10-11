@@ -72,6 +72,16 @@ void main() {
       expect(await template.render(context), equals('static fun markup'));
     });
 
+    test('assign calculation', () async {
+      final context = Context.create();
+
+      var template = Template.parse(context, Source(null, '{% assign total = 2 | add : 2 %} {{ total }} {{ total | multi: 2 }} {% endassign %}{{ total | default : "0" }}', null));
+
+      // context.variables['variable'] = 'badtimes';
+
+      expect(await template.render(context), equals(' 4 8 0'));
+    });
+
     test('bad assign', () async {
       final context = Context.create();
 
