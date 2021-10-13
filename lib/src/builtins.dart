@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:barcode_image/barcode_image.dart';
+import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:liquid_engine/src/model.dart';
@@ -283,6 +284,47 @@ class BuiltinsModule implements Module {
       }
     };
 
+    context.filters['qrcode'] = (input, args) {
+      LiquidEngine.logger.info("start qrcode");
+      var width = 300;
+      var height = 200;
+      var barcode = BarcodefromText("Code128");
+      if (args.isNotEmpty) {
+        width = int.tryParse("${args[0]}") ?? 300;
+        if (args.length > 1) {
+          height = int.tryParse("${args[1]}") ?? 200;
+        }
+        if (args.length > 2) {
+          barcode = BarcodefromText("${args[2]}");
+          LiquidEngine.logger.info(barcode);
+        }
+      }
+      var image = Image(width, height);
+      // Fill it with a solid color (white)
+      fill(image, getColor(255, 255, 255));
+      // Draw the barcode
+      drawBarcode(image, barcode, "$input", font: arial_24);
+      // encode as png
+      var dataImage = encodePng(image);
+      // base46 decode
+      var byteString = base64Encode(dataImage);
+
+      return "data:image/png;base64,$byteString";
+
+      // var _args = <String>[];
+      // LiquidEngine.logger.info("args ${args.runtimeType}");
+      // _args = List<String>.from(args);
+      // if (input is String) {
+      //   return input.tr(
+      //     args: _args,
+      //   );
+      // } else {
+      //   return "$input".tr(
+      //     args: _args,
+      //   );
+      // }
+    };
+
     context.filters['downcase'] = context.filters['lower'] = (input, args) => input!.toString().toLowerCase();
 
     context.filters['upcase'] = context.filters['upper'] = (input, args) => input!.toString().toUpperCase();
@@ -297,5 +339,54 @@ class BuiltinsModule implements Module {
     context.variables['true'] = true;
     context.variables['false'] = false;
     context.variables['null'] = null;
+  }
+}
+
+Barcode BarcodefromText(String type) {
+  switch (type.toLowerCase()) {
+    case "code39":
+      return Barcode.code39();
+    case "code93":
+      return Barcode.code93();
+    case "code128":
+      return Barcode.code128();
+    case "gs128":
+      return Barcode.gs128();
+    case "itf":
+      return Barcode.itf();
+    case "codeitf14":
+      return Barcode.itf14();
+    case "codeitf16":
+      return Barcode.itf16();
+    case "codeean13":
+      return Barcode.ean13();
+    case "codeean8":
+      return Barcode.ean8();
+    case "codeean5":
+      return Barcode.ean5();
+    case "codeean2":
+      return Barcode.ean2();
+    case "codeisbn":
+      return Barcode.isbn();
+    case "codeupca":
+      return Barcode.upcA();
+    case "codeupce":
+      return Barcode.upcE();
+    case "telepen":
+      return Barcode.telepen();
+    case "codabar":
+      return Barcode.codabar();
+    case "rm4scc":
+      return Barcode.rm4scc();
+    case "qrcode":
+      return Barcode.qrCode();
+    case "pdf417":
+      return Barcode.pdf417();
+    case "datamatrix":
+      return Barcode.dataMatrix();
+    case "aztec":
+      return Barcode.aztec();
+    default:
+      return Barcode.code128();
   }
 }

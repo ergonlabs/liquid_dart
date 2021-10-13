@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:liquid_engine/liquid_engine.dart';
@@ -97,13 +99,15 @@ class _HomePageState extends State<HomePage> {
     {% endfor %}
     {{ "welcome" | tr : "d" }}
     {{ "msg" | tr : "Dart", "Great" }}
+    <img  src="{{ "Hello" | qrcode : 200, 200, "QrCode" }}" />
+    <img  src="{{ "Hello" | qrcode : 200, 100, "code128" }}" />
     </table>
   </body>
 </html>
   """;
 
     final context = Context.create();
-
+    final file = File("${Directory.current.path}/index.html");
     context.variables['users'] = [
       {
         'name': 'Standard User',
@@ -118,6 +122,8 @@ class _HomePageState extends State<HomePage> {
     ];
 
     final template = Template.parse(context, Source.fromString(raw));
-    print(await template.render(context));
+    var content = await template.render(context);
+
+    file.writeAsStringSync(content);
   }
 }
