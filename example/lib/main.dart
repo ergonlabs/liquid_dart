@@ -108,6 +108,7 @@ class _HomePageState extends State<HomePage> {
 
     final context = Context.create();
     final file = File("${Directory.current.path}/index.html");
+    print(file.path);
     context.variables['users'] = [
       {
         'name': 'Standard User',

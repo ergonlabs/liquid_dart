@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:barcode_image/barcode_image.dart';
 import 'package:image/image.dart';
 import 'package:intl/intl.dart';
@@ -212,6 +213,22 @@ class BuiltinsModule implements Module {
       return 0.0;
     };
 
+    context.filters['roundDouble'] = (input, args) {
+      var digit = 2;
+      if (args.isNotEmpty == true) {
+        var d = args.first;
+        if (d is String) {
+          digit = int.tryParse(d) ?? 0;
+        } else if (d is num) {
+          digit = d.toInt();
+        }
+      }
+      if (input is num) {
+        return input.roundDouble(places: digit);
+      }
+      return 0.0;
+    };
+
     context.filters['stringAsFixed'] = (input, args) {
       var digit = 0;
       if (args.isNotEmpty == true) {
@@ -388,5 +405,13 @@ Barcode BarcodefromText(String type) {
       return Barcode.aztec();
     default:
       return Barcode.code128();
+  }
+}
+
+extension NumParsing on num {
+  double roundDouble({int places = 2}) {
+    var mod = pow(10.0, places) as double;
+    var coercion = this + 0.00000001;
+    return ((coercion * mod).round().toDouble() / mod);
   }
 }
