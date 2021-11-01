@@ -240,6 +240,14 @@ void main() {
       expect(await template.render(context), equals('3'));
     });
 
+    test('roundDouble', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '{{ 4.725 | roundDouble }}', null));
+
+      print((await template.render(context)));
+      expect(await template.render(context), equals('4.73'));
+    });
+
     test('parseDouble', () async {
       final context = Context.create();
       var template = Template.parse(context, Source(null, '{{ 3 | parseDouble }}', null));
