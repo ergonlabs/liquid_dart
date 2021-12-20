@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:convert';
 import 'dart:math';
 import 'package:barcode_image/barcode_image.dart';
@@ -258,6 +260,44 @@ class BuiltinsModule implements Module {
         return input.abs();
       }
       return 0;
+    };
+
+    context.filters['elementAt'] = (input, args) {
+      var index = int.tryParse("${args.first}");
+      if (index == null) {
+        print("index of $input is null");
+        index ??= 0;
+      }
+      if (input is String) {
+        var text = input;
+        if (index > text.length - 1) {
+          print("index is $index and larger than total length ${text.length}");
+          index = text.length;
+        }
+        return text[index];
+      }
+      if (input is List || input is Iterable) {
+        var list = input;
+        if (index > list.length - 1) {
+          print("index is $index and larger than total length ${list.length}");
+          index = list.length;
+        }
+        return list.elementAt(index);
+      }
+
+      if (input is Map) {
+        var values = input.values;
+        if (index > values.length - 1) {
+          print("index is $index and larger than total length ${values.length}");
+          index = values.length;
+        }
+        return values.elementAt(index);
+      }
+      if (input.runtimeType == "_InternalLinkedHashMap<String, Object>") {
+        return "";
+      }
+      print("input.runtimeType ${input.runtimeType}");
+      return "";
     };
 
     context.filters['tr'] = (input, args) {
