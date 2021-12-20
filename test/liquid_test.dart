@@ -119,16 +119,33 @@ void main() {
       expect(await template.render(context), equals(' a potabo 4 potabo 4.5 potabo'));
     });
 
-    test("elementAt", () async {
+    test("get", () async {
       final context = Context.create();
 
-      var template = Template.parse(context, Source(null, ' {{ row | elementAt : "0" }} {{row.name}}{% for row in rows %} {{ row | elementAt : "0" }} {{row.name}} {% endfor %}', null));
+      var template = Template.parse(context, Source(null, ' {{ row | get : "id" }} {{row.name}}{% for row in rows %} {{ row | get : "id" }} {{row.name}} {% endfor %}', null));
 
       var raw = const {"id": "1", "name": "mr.noname", "grade": "12"};
       var raws = const [
         {"id": "1", "name": "mr.noname", "grade": "12"}
       ];
       context.variables['row'] = raw;
+      context.variables['k'] = "id";
+      context.variables['rows'] = raws;
+
+      expect(await template.render(context), equals(' 1 mr.noname 1 mr.noname '));
+    });
+
+    test("elementAt", () async {
+      final context = Context.create();
+
+      var template = Template.parse(context, Source(null, ' {{ row | elementAt : 0 }} {{row.name}}{% for row in rows %} {{ row | elementAt : "0" }} {{row.name}} {% endfor %}', null));
+
+      var raw = const {"id": "1", "name": "mr.noname", "grade": "12"};
+      var raws = const [
+        {"id": "1", "name": "mr.noname", "grade": "12"}
+      ];
+      context.variables['row'] = raw;
+      context.variables['k'] = "id";
       context.variables['rows'] = raws;
 
       expect(await template.render(context), equals(' 1 mr.noname 1 mr.noname '));

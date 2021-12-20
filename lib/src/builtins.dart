@@ -262,6 +262,17 @@ class BuiltinsModule implements Module {
       return 0;
     };
 
+    context.filters['get'] = (input, args) {
+      var key = args.first;
+      if (input is Map) {
+        if (input.containsKey(key)) {
+          return input[key];
+        }
+        return "";
+      }
+      return null;
+    };
+
     context.filters['elementAt'] = (input, args) {
       var index = int.tryParse("${args.first}");
       if (index == null) {
