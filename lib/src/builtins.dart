@@ -7,6 +7,7 @@ import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:liquid_engine/src/model.dart';
+import 'package:markdown/markdown.dart' as md;
 import 'block.dart';
 import 'buildin_tags/assign.dart';
 import 'buildin_tags/capture.dart';
@@ -349,6 +350,13 @@ class BuiltinsModule implements Module {
           // namedArgs: _namedArgs,
           // gender: _gender,
         );
+      }
+    };
+
+    context.filters['markdownToHtml'] = (input, args) {
+      LiquidEngine.logger.info("start markdownToHtml");
+      if (input != null) {
+        return md.markdownToHtml((input ?? "").toString()).replaceAll(RegExp("\n"), "");
       }
     };
 

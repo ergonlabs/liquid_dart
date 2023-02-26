@@ -296,6 +296,14 @@ void main() {
       expect(await template.render(context), equals('3.000 3'));
     });
 
+    test('markdownToHtml', () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, '''{{ "Hello *Markdown* \n ## Headers" | markdownToHtml }}''', null));
+
+      print((await template.render(context)));
+      expect(await template.render(context), equals('<p>Hello <em>Markdown</em></p><h2>Headers</h2>'));
+    });
+
     test('date', () async {
       final context = Context.create();
       var template = Template.parse(context, Source(null, '{{ now | date: format }}', null));
