@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:barcode_image/barcode_image.dart';
+import 'package:dart_eval/dart_eval.dart';
 import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -357,6 +358,13 @@ class BuiltinsModule implements Module {
       LiquidEngine.logger.info("start markdownToHtml");
       if (input != null) {
         return md.markdownToHtml((input ?? "").toString()).replaceAll(RegExp("\n"), "");
+      }
+    };
+
+    context.filters['eval'] = (input, args) {
+      LiquidEngine.logger.info("start eval");
+      if (input != null) {
+        return eval(input);
       }
     };
 
