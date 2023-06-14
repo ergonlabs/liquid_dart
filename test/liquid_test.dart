@@ -1,11 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:liquid_engine/liquid_engine.dart';
-import 'package:liquid_engine/src/context.dart';
-import 'package:liquid_engine/src/errors.dart';
 import 'package:liquid_engine/src/exception/parse_block_exception.dart';
-import 'package:liquid_engine/src/model.dart';
-import 'package:liquid_engine/src/template.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('tests', () {
@@ -417,6 +413,103 @@ void main() {
       template = Template.parse(context, await root.resolve('base2'));
       expect(await template.render(context), equals('outer == base2'));
     });
+
+    test("mapOf empty|null", () async {
+      final context = Context.create();
+      var template = Template.parse(context, Source(null, "{{ null | mapOf}}", null));
+      expect(await template.render(context), equals(''));
+    });
+
+    test("mapOf List", () async {
+      final context = Context.create();
+      final values = [
+        {"id": 1, "name": "name_1", "score": 10},
+        {"id": 2, "name": "name_2", "score": 20},
+        {"id": 3, "name": "name_3", "score": 30},
+      ];
+      context.variables['values'] = values;
+      context.variables['result'] = values.map((e) => e['score']).toList();
+      var template = Template.parse(context, Source(null, "{{ values | mapOf: 'score' }}", null));
+      var html = await template.render(context);
+
+      /// print(html);
+      expect(html, equals(context.variables['result'].toString()));
+    });
+
+    test("whereOf List", () async {
+      final context = Context.create();
+      final values = [
+        {"id": 1, "name": "name_1", "score": 10},
+        {"id": 2, "name": "name_2", "score": 20},
+        {"id": 3, "name": "name_3", "score": 30},
+      ];
+      context.variables['values'] = values;
+      context.variables['result'] = values.where((e) => num.tryParse(e['score'].toString())! > 10).toList();
+      var template = Template.parse(context, Source(null, "{{ values | whereOf: 'score', '>', 10 }}", null));
+      var html = await template.render(context);
+
+      /// print(html);
+      expect(html, equals(context.variables['result'].toString()));
+    });
+
+    test("foldOf List", () async {
+      final context = Context.create();
+      final values = [
+        {"id": 1, "name": "name_1", "score": '10'},
+        {"id": 2, "name": "name_2", "score": 20},
+        {"id": 3, "name": "name_3", "score": 30},
+      ];
+      context.variables['values'] = values;
+      context.variables['result'] = values.fold<num>(0, (pre, e) => pre += num.tryParse(e['score'].toString())!);
+      var template = Template.parse(context, Source(null, "{{ values | foldOf: 'score', '+', 0 }}", null));
+      var html = await template.render(context);
+
+      /// print(html);
+      expect(html, equals(context.variables['result'].toString()));
+    });
+
+    test("foldOf List in realworld", () async {
+      final context = Context.create();
+
+      final values = {
+        "id": 1,
+        "amount": 12,
+        "receipts": [
+          {"id": 1, "name": "name_1", "score": '10', "enabled": true},
+          {"id": 2, "name": "name_2", "score": 20, "enabled": true},
+          {"id": 3, "name": "name_3", "score": 30, "enabled": false},
+        ]
+      };
+      context.variables['values'] = values;
+      context.variables['result'] = (values['receipts'] as List<Map>).where((e) => e['enabled']).fold<num>(0, (pre, e) => pre += num.tryParse(e['score'].toString())!);
+      var template = Template.parse(context, Source(null, "{{ values.receipts | whereOf: 'enabled', '=', true | foldOf: 'score', '+', 0 }}", null));
+      var html = await template.render(context);
+
+      print(html);
+      expect(html, equals(context.variables['result'].toString()));
+    });
+
+    test("test mapOf", () {
+      List<Map<String, dynamic>> values = [
+        {"id": 1, "name": "name_1", "score": 10},
+        {"id": 2, "name": "name_2", "score": 20},
+        {"id": 3, "name": "name_3", "score": 30},
+      ];
+
+      final filter = values.where((e) => e['score'] != null).toList();
+
+      final objects = filter.map((e) => e['score']).toList();
+
+      final totalScore = objects.reduce((v, e) => (v ?? 0) + e);
+      print("filter $filter");
+      print("totalScore $totalScore");
+
+      final object = {"id": 1, "name": "name_1", "score": 10};
+      print(object.entries.map((e) => e.key));
+      var totalReduce = values.map((e) => e['score']).reduce((value, element) => value + element);
+      print("totalReduce $totalReduce");
+    });
+    
   });
 
   test('regroup', () async {

@@ -3,9 +3,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:barcode_image/barcode_image.dart';
-import 'package:dart_eval/dart_eval.dart';
 import 'package:image/image.dart';
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:liquid_engine/src/model.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -361,11 +359,107 @@ class BuiltinsModule implements Module {
       }
     };
 
-    context.filters['eval'] = (input, args) {
-      LiquidEngine.logger.info("start eval");
-      if (input != null) {
-        return eval(input);
+    
+    context.filters['mapOf'] = (input, args) {
+      LiquidEngine.logger.info("start mapOf");
+
+      if (input == null || !(input is List)) {
+        return "";
       }
+
+      if (input is List<Map> && input.isNotEmpty) {
+        // if args[0] is not null, then present key else return index
+        if (args.isNotEmpty) {
+          final String? key = args.first;
+          return input.map((e) => key == null ? e : e[key]).toList();
+        }
+      }
+      return input;
+    };
+
+    context.filters['whereOf'] = (input, args) {
+      LiquidEngine.logger.info("start whereOf");
+      if (input == null || !(input is List)) {
+        return "";
+      }
+
+      if (input is List<Map> && input.isNotEmpty) {
+        // if args[0] is not null, then present key else return index
+        if (args.isNotEmpty && args.length == 3) {
+          final key = args[0] as String?;
+          final operation = args[1] as String?;
+          final value = args[2];
+          switch (operation) {
+            case '==':
+              return input.where((e) => (key == null ? e : e[key]) == value).toList();
+            case '>=':
+              return input.where((e) => (key == null ? e : e[key]) >= value).toList();
+            case '>':
+              return input.where((e) => (key == null ? e : e[key]) > value).toList();
+            case '<':
+              return input.where((e) => (key == null ? e : e[key]) < value).toList();
+            case '<=':
+              return input.where((e) => (key == null ? e : e[key]) <= value).toList();
+            default:
+              return input.where((e) => (key == null ? e : e[key]) == value).toList();
+          }
+        }
+      }
+      return input;
+    };
+
+    context.filters['foldOf'] = (input, args) {
+      LiquidEngine.logger.info("start foldOf");
+
+      if (input == null || !(input is List)) {
+        return "";
+      }
+
+      if (input is List<Map> && input.isNotEmpty) {
+        // if args[0] is not null, then present key else return index
+        if (args.isNotEmpty && args.length > 1) {
+          final key = args.first as String?;
+          final operation = args[1] as String?;
+          final initialValue = args.length > 1 ? num.tryParse(args[1].toString()) ?? 0 : 0;
+
+          switch (operation) {
+            case '+':
+              return input.fold<num>(initialValue, (pre, e) => pre += (key == null ? num.tryParse(e.toString()) : num.tryParse(e[key].toString())) ?? 0);
+            case '-':
+              return input.fold<num>(initialValue, (pre, e) => pre -= (key == null ? num.tryParse(e.toString()) : num.tryParse(e[key].toString())) ?? 0);
+            case '*':
+              return input.fold<num>(initialValue, (pre, e) => pre *= (key == null ? num.tryParse(e.toString()) : num.tryParse(e[key].toString())) ?? 0);
+            case '/':
+              return input.fold<num>(initialValue, (pre, e) => pre /= (key == null ? num.tryParse(e.toString()) : num.tryParse(e[key].toString())) ?? 0);
+            case '%':
+              return input.fold<num>(initialValue, (pre, e) => pre %= (key == null ? num.tryParse(e.toString()) : num.tryParse(e[key].toString())) ?? 0);
+            default:
+              return input.fold<num>(initialValue, (pre, e) => pre += (key == null ? num.tryParse(e.toString()) : num.tryParse(e[key].toString())) ?? 0);
+          }
+        }
+      }
+      // if args[0] is not null, then present key else return index
+      if (args.isNotEmpty && args.length > 1) {
+        final String operation = args[1];
+        final num initialValue = args.length > 1 ? args[1] : 0;
+
+        switch (operation) {
+          case '+':
+            return input.fold<num>(initialValue, (pre, e) => pre += num.tryParse(e.toString()) ?? 0);
+          case '-':
+            return input.fold<num>(initialValue, (pre, e) => pre -= num.tryParse(e.toString()) ?? 0);
+          case '*':
+            return input.fold<num>(initialValue, (pre, e) => pre *= num.tryParse(e.toString()) ?? 0);
+          case '/':
+            return input.fold<num>(initialValue, (pre, e) => pre /= num.tryParse(e.toString()) ?? 0);
+          case '%':
+            return input.fold<num>(initialValue, (pre, e) => pre %= num.tryParse(e.toString()) ?? 0);
+          default:
+            return input.fold<num>(initialValue, (pre, e) => pre += num.tryParse(e.toString()) ?? 0);
+        }
+      }
+
+      return input;
     };
 
     context.filters['qrcode'] = (input, args) {
