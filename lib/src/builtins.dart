@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 import 'package:barcode_image/barcode_image.dart';
 import 'package:image/image.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -359,7 +360,6 @@ class BuiltinsModule implements Module {
       }
     };
 
-    
     context.filters['mapOf'] = (input, args) {
       LiquidEngine.logger.info("start mapOf");
 
@@ -477,11 +477,11 @@ class BuiltinsModule implements Module {
           LiquidEngine.logger.info(barcode);
         }
       }
-      var image = Image(width, height);
+      var image = Image(width: width, height: height);
       // Fill it with a solid color (white)
-      fill(image, getColor(255, 255, 255));
+      fill(image, color: ColorUint32.rgb(255, 255, 255)); //getColor(255, 255, 255)
       // Draw the barcode
-      drawBarcode(image, barcode, "$input", font: arial_24);
+      drawBarcode(image, barcode, "$input", font: arial24);
       // encode as png
       var dataImage = encodePng(image);
       // base46 decode

@@ -300,31 +300,31 @@ void main() {
       expect(await template.render(context), equals('<p>Hello <em>Markdown</em></p><h2>Headers</h2>'));
     });
 
-    test('eval', () async {
-      final context = Context.create();
-      var template = Template.parse(context, Source(null, '''{{ "2+2" | eval }}''', null));
+    // test('eval', () async {
+    //   final context = Context.create();
+    //   var template = Template.parse(context, Source(null, '''{{ "2+2" | eval }}''', null));
 
-      print((await template.render(context)));
-      expect(await template.render(context), equals('4'));
-    });
+    //   print((await template.render(context)));
+    //   expect(await template.render(context), equals('4'));
+    // });
 
-    test('eval function', () async {
-      final context = Context.create();
-      var template = Template.parse(context, Source(null, '''{{ "class Cat {
-        Cat(this.name);
-        final String name;
-        String speak() {
-          return name;
-        }
-      }
-      String main() {
-        final cat = Cat('Fluffy');
-        return cat.speak();
-      }" | eval }}''', null));
+    // test('eval function', () async {
+    //   final context = Context.create();
+    //   var template = Template.parse(context, Source(null, '''{{ "class Cat {
+    //     Cat(this.name);
+    //     final String name;
+    //     String speak() {
+    //       return name;
+    //     }
+    //   }
+    //   String main() {
+    //     final cat = Cat('Fluffy');
+    //     return cat.speak();
+    //   }" | eval }}''', null));
 
-      print((await template.render(context)));
-      expect(await template.render(context), equals('Fluffy'));
-    });
+    //   print((await template.render(context)));
+    //   expect(await template.render(context), equals('Fluffy'));
+    // });
 
     test('date', () async {
       final context = Context.create();

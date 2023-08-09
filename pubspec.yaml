@@ -4,11 +4,11 @@ version: 0.2.2+1
 homepage: https://github.com/ergonlabs/liquid_dart
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  string_scanner: ^1.1.0
-  intl: ^0.17.0
+  string_scanner: ^1.2.0
+  intl: ^0.18.0
   easy_localization: ^3.0.0
   easy_logger: ^0.0.2
   barcode_image: ^2.0.0
