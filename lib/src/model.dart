@@ -1,5 +1,7 @@
 export 'model_web.dart' if (dart.library.io) 'model_io.dart';
 
+import 'package:easy_logger/easy_logger.dart';
+
 abstract class Root {
   Future<Source> resolve(String relPath);
 }
@@ -53,4 +55,19 @@ class Token {
 
   @override
   String toString() => '<$type line=$line column=$column value=\'$value\'>';
+}
+
+class LiquidEngine {
+  LiquidEngine();
+  static EasyLogger logger = EasyLogger(
+    name: 'liquid_engine',
+    defaultLevel: LevelMessages.debug,
+    enableBuildModes: [BuildMode.debug, BuildMode.profile, BuildMode.release],
+    enableLevels: [
+      LevelMessages.debug,
+      LevelMessages.info,
+      LevelMessages.error,
+      LevelMessages.warning,
+    ],
+  );
 }
