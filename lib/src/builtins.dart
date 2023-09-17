@@ -479,7 +479,7 @@ class BuiltinsModule implements Module {
       }
       var image = Image(width: width, height: height);
       // Fill it with a solid color (white)
-      fill(image, color: ColorUint32.rgb(255, 255, 255)); //getColor(255, 255, 255)
+      fill(image, color: ColorRgb8(255, 255, 255)); //getColor(255, 255, 255)
       // Draw the barcode
       drawBarcode(image, barcode, "$input", font: arial24);
       // encode as png
