@@ -213,14 +213,13 @@ void main() {
       expect(await template.render(context), equals('Hi, friend!'));
     });
 
-
     test('render', () async {
       final context = Context.create();
       final root = TestRoot({
         'render': '{% render "name.html" %}',
         'render_with_parameters': '{% render "name_age.html", first_name, last_name, age:1 %}',
         'render_with_with': '{% render "name.html" with first_name as name %}',
-
+        'render_with_for': '{% render "name.html" for names as name %}',
         'name_age.html': '{{ first_name }} {{ last_name }}! {{age}}',
         'name.html': '{{ name }}!',
       });
@@ -228,16 +227,19 @@ void main() {
       context.variables['first_name'] = 'John';
       context.variables['last_name'] = 'John';
       context.variables['greeting'] = 'Hello';
+      context.variables['names'] = ['john', 'mark', 'mary'];
 
       var template = Template.parse(context, await root.resolve('render'));
       expect(await template.render(context), equals('!'));
 
-       template = Template.parse(context, await root.resolve('render_wifth_parameters'));
+      template = Template.parse(context, await root.resolve('render_with_parameters'));
       expect(await template.render(context), equals('John John! 1'));
 
-       template = Template.parse(context, await root.resolve('render_with_with'));
+      template = Template.parse(context, await root.resolve('render_with_with'));
       expect(await template.render(context), equals('John!'));
 
+      template = Template.parse(context, await root.resolve('render_with_for'));
+      expect(await template.render(context), equals(['john', 'mark', 'mary'].map((e) => '$e!').join('')));
     });
 
     test('extends', () async {

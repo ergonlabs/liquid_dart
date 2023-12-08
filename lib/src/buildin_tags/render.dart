@@ -6,22 +6,34 @@ import '../model.dart';
 import '../parser/parser.dart';
 import '../parser/tag_parser.dart';
 import '../tag.dart';
+import './for.dart';
 
 class Render extends Block {
   final List<_Assign> assignments;
   final DocumentFuture childBuilder;
+  bool isLoop;
 
-  Render._(this.assignments, this.childBuilder) : super([]);
+  Render._(this.assignments, this.childBuilder, [this.isLoop = false]) : super([]);
 
   @override
   Stream<String> render(RenderContext context) async* {
-    var innerContext = context;
-    innerContext = innerContext.clone();
+    var innerContext = context.cloneAsRoot();
     innerContext.variables.clear();
 
-    innerContext = innerContext.push({for (var a in assignments) a.to: await a.from.evaluate(context)});
+    if (isLoop) {
+      var collection = (assignments[0].from as LookupExpression).name.value;
+      var collectionValue = context.variables[collection];
 
-    yield* (await childBuilder.resolve(innerContext)).render(innerContext);
+      innerContext.variables.addAll({collection: collectionValue});
+
+      For forBlock = For(assignments[0].to, assignments[0].from, [
+        await childBuilder.resolve(innerContext),
+      ], []);
+      yield* forBlock.render(innerContext);
+    } else {
+      innerContext = innerContext.push({for (var a in assignments) a.to: await a.from.evaluate(context)});
+      yield* (await childBuilder.resolve(innerContext)).render(innerContext);
+    }
   }
 
   static BlockParserFactory factory = () => _RenderBlockParser();
@@ -40,6 +52,7 @@ class _RenderBlockParser extends BlockParser {
 
   @override
   Block create(List<Token> tokens, List<Tag> children) {
+    bool hasFor = false;
     final parser = TagParser.from(tokens);
     final childBuilder = parser.parseDocumentReference(context);
 
@@ -73,9 +86,10 @@ class _RenderBlockParser extends BlockParser {
       }
     }
 
-    if (parser.current.value == 'with') {
-      while (parser.current.type == TokenType.identifier) {
+    if (['with', 'for'].contains(parser.current.value)) {
+      hasFor = parser.current.value == "for";
 
+      while (parser.current.type == TokenType.identifier) {
         parser.expect(types: [TokenType.identifier]);
 
         if (parser.peekNext() != null) {
@@ -84,14 +98,14 @@ class _RenderBlockParser extends BlockParser {
           if (parser.current.value == 'as') {
             parser.moveNext();
             parser.expect(types: [TokenType.identifier]);
-            assignments.add(_Assign(parser.current.value, to ));
+            assignments.add(_Assign(parser.current.value, to));
           }
         }
         parser.moveNext();
       }
     }
 
-    return Render._(assignments, childBuilder);
+    return Render._(assignments, childBuilder, hasFor);
   }
 
   @override

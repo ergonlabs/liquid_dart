@@ -65,7 +65,7 @@ class Parser {
 
           Token? asTarget;
           if (args.where((element) => element.value == 'as').isNotEmpty) {
-            if (args.where((element) => ["with", "from"].contains(element.value)).isEmpty) {
+            if (args.where((element) => ["with", "for"].contains(element.value)).isEmpty) {
               if (args.length > 2 && args[args.length - 1].type == TokenType.identifier) {
                 if (args[args.length - 2].value == 'as') {
                   asTarget = args.last;
