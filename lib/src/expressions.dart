@@ -3,11 +3,13 @@ import 'dart:async';
 import './errors.dart';
 import 'block.dart';
 import 'context.dart';
+import 'drop.dart';
 import 'model.dart';
 import 'tag.dart';
 
 abstract class Expression {
   Future<dynamic> evaluate(RenderContext context);
+
   @override
   String toString() {
     return 'Expression{}';
@@ -54,6 +56,7 @@ class NotExpression extends BooleanCastExpression {
 
   @override
   Future<bool> evaluate(RenderContext context) async => !(await super.evaluate(context));
+
   @override
   String toString() {
     return 'NotExpression{}';
@@ -69,6 +72,7 @@ class BinaryOperation implements Expression {
 
   @override
   Future<dynamic> evaluate(RenderContext context) async => operation(await left.evaluate(context), await right.evaluate(context));
+
   @override
   String toString() {
     return 'BinaryOperation{operation: $operation, left: $left, right: $right}';
@@ -92,6 +96,7 @@ class ConstantExpression implements Expression {
 
   @override
   Future<dynamic> evaluate(RenderContext context) async => value;
+
   @override
   String toString() {
     return 'ConstantExpression{value: $value}';
@@ -126,6 +131,12 @@ class MemberExpression implements Expression {
     if (base == null) {
       return null;
     }
+
+    if (base is Drop) {
+      base.context = context;
+      return base(Symbol(member.value));
+    }
+
     if (base is Map) {
       return base[member.value];
     }
@@ -161,6 +172,7 @@ class FilterExpression implements Expression {
   }
 
   Future<dynamic> _evaluateToFuture(Expression e, RenderContext context) async => await e.evaluate(context);
+
   @override
   String toString() {
     return 'FilterExpression{input: $input, name: $name, arguments: $arguments}';
@@ -176,6 +188,7 @@ class BlockExpression implements Expression {
 
   @override
   Future<String> evaluate(RenderContext context) => block.render(context).join('');
+
   @override
   String toString() {
     return 'BlockExpression{block: $block}';

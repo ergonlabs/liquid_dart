@@ -1,10 +1,8 @@
 import 'package:liquid_engine/liquid_engine.dart';
-import 'package:liquid_engine/src/context.dart';
-import 'package:liquid_engine/src/errors.dart';
 import 'package:liquid_engine/src/exception/parse_block_exception.dart';
-import 'package:liquid_engine/src/model.dart';
-import 'package:liquid_engine/src/template.dart';
 import 'package:test/test.dart';
+
+import 'shared.dart';
 
 void main() {
   group('tests', () {
@@ -217,6 +215,35 @@ void main() {
       expect(await template.render(context), equals('Hi, friend!'));
     });
 
+    test('render', () async {
+      final context = Context.create();
+      final root = TestRoot({
+        'render': '{% render "name.html" %}',
+        'render_with_parameters': '{% render "name_age.html", first_name, last_name, age:1 %}',
+        'render_with_with': '{% render "name.html" with first_name as name %}',
+        'render_with_for': '{% render "name.html" for names as name %}',
+        'name_age.html': '{{ first_name }} {{ last_name }}! {{age}}',
+        'name.html': '{{ name }}!',
+      });
+
+      context.variables['first_name'] = 'John';
+      context.variables['last_name'] = 'John';
+      context.variables['greeting'] = 'Hello';
+      context.variables['names'] = ['john', 'mark', 'mary'];
+
+      var template = Template.parse(context, await root.resolve('render'));
+      expect(await template.render(context), equals('!'));
+
+      template = Template.parse(context, await root.resolve('render_with_parameters'));
+      expect(await template.render(context), equals('John John! 1'));
+
+      template = Template.parse(context, await root.resolve('render_with_with'));
+      expect(await template.render(context), equals('John!'));
+
+      template = Template.parse(context, await root.resolve('render_with_for'));
+      expect(await template.render(context), equals(['john', 'mark', 'mary'].map((e) => '$e!').join('')));
+    });
+
     test('extends', () async {
       final context = Context.create();
       final root = TestRoot({
@@ -268,23 +295,4 @@ void main() {
         equals(
             ' <ul>  <li>India <ul>   <li> Mumbai: 19,000,000 </li>   <li> Calcutta: 15,000,000 </li>    </ul>  </li>  <li>USA <ul>   <li> New York: 20,000,000 </li>   <li> Chicago: 7,000,000 </li>    </ul>  </li>  <li>Japan <ul>   <li> Tokyo: 33,000,000 </li>    </ul>  </li>  </ul>'));
   });
-}
-
-String reverse(String string) {
-  final sb = StringBuffer();
-  for (int i = string.length - 1; i >= 0; i--) {
-    sb.writeCharCode(string.codeUnitAt(i));
-  }
-  return sb.toString();
-}
-
-class TestRoot implements Root {
-  Map<String, String> files;
-
-  TestRoot(this.files);
-
-  @override
-  Future<Source> resolve(String relPath) async {
-    return Source(null, files[relPath]!, this);
-  }
 }
