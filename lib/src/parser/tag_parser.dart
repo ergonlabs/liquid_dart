@@ -7,16 +7,28 @@ import '../model.dart';
 class TagParser {
   final Iterator<Token> tokens;
 
-  TagParser.from(List<Token> tokens) : this.fromIterator(tokens.followedBy([Token.eof]).iterator..moveNext());
+  int index = 0;
 
-  TagParser.fromIterator(this.tokens);
+  List<Token> _originalTokens = [];
+
+  TagParser.from(List<Token> tokens) : this.fromIterator(tokens.followedBy([Token.eof]).iterator..moveNext(), tokens);
+
+  TagParser.fromIterator(this.tokens, [this._originalTokens = const []]);
 
   Token get current => tokens.current;
+
+  Token? peekNext() {
+    if (index >= _originalTokens.length) {
+      return null;
+    }
+    return _originalTokens.elementAt(index + 1);
+  }
 
   bool moveNext() {
     if (current == Token.eof) {
       return true;
     }
+    index += 1;
     return tokens.moveNext();
   }
 
@@ -98,7 +110,7 @@ class TagParser {
   Expression parseSingleTokenExpression() {
     expect(types: [TokenType.identifier, TokenType.single_string, TokenType.double_string, TokenType.number]);
     final name = tokens.current;
-    tokens.moveNext();
+    moveNext();
 
     if (name.type == TokenType.identifier) {
       if (name.value == 'true') {
@@ -123,10 +135,10 @@ class TagParser {
     var exp = parseSingleTokenExpression();
 
     while (tokens.current.type == TokenType.dot) {
-      tokens.moveNext();
+      moveNext();
 
       exp = MemberExpression(exp, tokens.current);
-      tokens.moveNext();
+      moveNext();
     }
 
     return exp;
@@ -143,17 +155,17 @@ class TagParser {
 
   Expression parseFilters(Expression exp) {
     while (tokens.current.type == TokenType.pipe) {
-      tokens.moveNext();
+      moveNext();
 
       expect(types: [TokenType.identifier]);
       final name = tokens.current;
       final arguments = <Expression>[];
 
-      if (tokens.moveNext() && tokens.current.type == TokenType.colon) {
-        tokens.moveNext();
+      if (moveNext() && tokens.current.type == TokenType.colon) {
+        moveNext();
         do {
           arguments.add(parseMemberExpression());
-        } while (tokens.current.type == TokenType.comma && tokens.moveNext());
+        } while (tokens.current.type == TokenType.comma && moveNext());
       }
 
       exp = FilterExpression(exp, name, arguments);

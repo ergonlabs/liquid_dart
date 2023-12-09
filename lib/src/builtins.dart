@@ -9,6 +9,7 @@ import 'buildin_tags/for.dart';
 import 'buildin_tags/if.dart';
 import 'buildin_tags/ifchanged.dart';
 import 'buildin_tags/include.dart';
+import 'buildin_tags/render.dart';
 import 'buildin_tags/load.dart';
 import 'buildin_tags/named_block.dart';
 import 'buildin_tags/regroup.dart';
@@ -27,6 +28,7 @@ class BuiltinsModule implements Module {
     context.tags['if'] = If.factory;
     context.tags['unless'] = If.unlessFactory;
     context.tags['include'] = Include.factory;
+    context.tags['render'] = Render.factory;
     context.tags['filter'] = BlockParser.simple(FilterBlock.factory);
     context.tags['load'] = BlockParser.simple(Load.factory, hasEndTag: false);
     context.tags['block'] = BlockParser.simple(NamedBlock.factory);
