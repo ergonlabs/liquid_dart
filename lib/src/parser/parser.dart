@@ -1,9 +1,8 @@
-import '../exception/parse_block_exception.dart';
-
 import '../block.dart';
 import '../context.dart';
 import '../document.dart';
 import '../errors.dart';
+import '../exception/parse_block_exception.dart';
 import '../expressions.dart';
 import '../model.dart';
 import '../tag.dart';
@@ -65,9 +64,15 @@ class Parser {
           }
 
           Token? asTarget;
-          if (args.length >= 2 && args[args.length - 1].type == TokenType.identifier && args[args.length - 2].value == 'as') {
-            asTarget = args.last;
-            args.length = args.length - 2;
+          if (args.where((element) => element.value == 'as').isNotEmpty) {
+            if (args.where((element) => ["with", "for"].contains(element.value)).isEmpty) {
+              if (args.length > 2 && args[args.length - 1].type == TokenType.identifier) {
+                if (args[args.length - 2].value == 'as') {
+                  asTarget = args.last;
+                  args.length = args.length - 2;
+                }
+              }
+            }
           }
 
           if (context.tags.containsKey(start.value)) {
